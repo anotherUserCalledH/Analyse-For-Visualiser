@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ListView?>
+<?import java.util.ArrayList?>
+<?import javafx.scene.layout.ColumnConstraints?>
+
+<VBox	xmlns:fx="http://javafx.com/fxml"
+		fx:controller="musicanalysis.gui.Controller"
+		alignment="CENTER">
+	<GridPane gridLinesVisible="true" alignment="TOP_CENTER">
+		<columnConstraints>
+			<ColumnConstraints percentWidth="33.3" />
+			<ColumnConstraints percentWidth="33.3" />
+			<ColumnConstraints percentWidth="33.3" />
+		</columnConstraints>
+		<VBox spacing="10" GridPane.columnIndex="0" alignment="TOP_CENTER">
+			<padding>
+				<Insets left="20.0" right="20.0" bottom="20.0" top="20.0"/>
+			</padding>
+			<Label text="Choose New Song"/>
+			<Button text="Choose File" onAction="#chooseFile"/>
+			<Label fx:id="fileNameLabel" text="Chosen Song: "/>
+			<Button text="Confirm"/>
+		</VBox>
+		<VBox spacing="10" GridPane.columnIndex="1" alignment="TOP_CENTER">
+			<padding>
+				<Insets left="20.0" right="20.0" bottom="20.0" top="20.0"/>
+			</padding>
+			<Label text="Load Previous Song"/>
+			<ListView fx:id="savedSongsListView" maxHeight="200.0"/>
+		</VBox>
+		<VBox fx:id="sourceSeparationMenu" visible="false" spacing="10" GridPane.columnIndex="2" alignment="TOP_CENTER">
+			<padding>
+				<Insets left="20.0" right="20.0" bottom="20.0" top="20.0"/>
+			</padding>
+			<Label text="Source Separation"/>
+			<Label wrapText="true" text="Source separation is a pre-requisite for several of the analysis algorithms. It can take up to 10 minutes, so it is advisable to begin it as soon as possible. You only need to do it once per song." style="-fx-border-color: black; -fx-text-alignment: CENTER; -fx-padding: 10px"/>
+			<Button text="Begin Source Separation"/>
+		</VBox>
+	</GridPane>
+<!-- 	<HBox spacing="10" alignment="TOP_LEFT">
+		<padding>
+			<Insets left="20.0" right="20.0" bottom="20.0" top="20.0"/>
+		</padding>
+	</HBox> -->
+	<GridPane gridLinesVisible="true" style="-fx-background-color: red" alignment="CENTER" VBox.vgrow="ALWAYS">
+		<HBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER">
+			<Label text="BEAT"/>
+			<Button fx:id="analyseBeatButton" text="Analyse" onAction="#analyseBeat" disable="true"/>
+		</HBox>
+		<HBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER">
+			<Label text="PITCH"/>
+			<Button fx:id="analysePitchButton" text="Analyse" onAction="#analysePitch" disable="true"/>
+		</HBox>
+		<HBox spacing="10" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER">
+			<Label text="???"/>
+			<Button text="Run Source Separation"/>
+		</HBox>
+	</GridPane>
+	<fx:define>
+		<ArrayList fx:id="analyseButtons">
+			<fx:reference source="analyseBeatButton" /> 
+			<fx:reference source="analysePitchButton" />
+		</ArrayList>
+	</fx:define>
+</VBox>
+
