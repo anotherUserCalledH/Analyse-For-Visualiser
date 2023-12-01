@@ -16,7 +16,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.text.Text;
 
 
 import java.io.File;
@@ -44,6 +43,15 @@ public class Controller
 	private ProgressBar separationProgressBar;
 
 	@FXML
+	private Button analyseBeatButton;
+
+	@FXML
+	private Button analysePitchButton;
+
+	@FXML
+	private Button analyseOnsetButton;
+
+	@FXML
 	private ImageView beatStatusIcon;
 
 	@FXML
@@ -53,48 +61,31 @@ public class Controller
 	private ImageView onsetStatusIcon;
 
 	@FXML
-	private Button analyseBeatButton;
+	private Label beatStatusLabel;
 
 	@FXML
-	private Button analysePitchButton;
+	private Label pitchStatusLabel;
 
 	@FXML
-	private Button analyseOnsetButton;
+	private Label onsetStatusLabel;
 
 	private File chosenFile;
 	private Label separationProgressLabel;
+	private AnalysisStatus beatStatus;
+	private AnalysisStatus pitchStatus;
+	private AnalysisStatus onsetStatus;
 
 	private Model model1 = new Model();
 
-	private static Image backgroundIconImage;
-	private static Image tickIconImage;
-	private static Image crossIconImage;
-
-	static
-	{
-		try
-		{
-			backgroundIconImage = new Image(GUI.class.getResource("background_icon.png").toString());
-			tickIconImage = new Image(GUI.class.getResource("tick_icon.png").toString());
-			crossIconImage = new Image(GUI.class.getResource("cross_icon.png").toString());
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
 
 	public void initialize()
 	{
-		initialiseIcon(beatStatusIcon);
-		initialiseIcon(pitchStatusIcon);
-		initialiseIcon(onsetStatusIcon);
-
-		initialiseButtons();
+		beatStatus = new AnalysisStatus(analyseBeatButton, beatStatusIcon, beatStatusLabel);
+		pitchStatus = new AnalysisStatus(analysePitchButton, pitchStatusIcon, pitchStatusLabel);
+		onsetStatus = new AnalysisStatus(analyseOnsetButton, onsetStatusIcon, onsetStatusLabel);
 
 		separationProgressLabel = new Label("Source Separation Successful! :)");
 		separationProgressBar.setProgress(0);
-
 
 		savedSongsListView.setItems(model1.getSavedSongs());
 
@@ -107,32 +98,10 @@ public class Controller
 				{
 					SavedSong selectedSong = savedSongsListView.getSelectionModel().getSelectedItem();
 					model1.setSelectedSong(selectedSong);
-					updateAnalyseStatus(selectedSong);
+					updateAnalysisStatus(selectedSong);
 				}
             }
         });
-	}
-
-	private void initialiseIcon(ImageView currentIcon)
-	{
-		currentIcon.setImage(backgroundIconImage);
-		currentIcon.setFitWidth(25);
-		currentIcon.setPreserveRatio(true);
-		currentIcon.setCache(true);
-	}
-
-	private void initialiseButtons()
-	{
-		Text buttonSizeText = new Text("Complete");
-		buttonSizeText.setFont(analyseBeatButton.getFont());
-		double textWidth = buttonSizeText.getBoundsInLocal().getWidth();
-		double widthWithPadding = textWidth + 20;
-		analyseBeatButton.setMinWidth(widthWithPadding);
-		analyseBeatButton.setMaxWidth(widthWithPadding);
-		analysePitchButton.setMinWidth(widthWithPadding);
-		analysePitchButton.setMaxWidth(widthWithPadding);
-		analyseOnsetButton.setMinWidth(widthWithPadding);
-		analyseOnsetButton.setMaxWidth(widthWithPadding);
 	}
 
 	private void setFileNameLabel(String labelString)
@@ -140,21 +109,17 @@ public class Controller
 		fileNameLabel.setText("Chosen Song: " + labelString);
 	}
 
-	private void updateAnalyseStatus(SavedSong selectedSong)
+	private void updateAnalysisStatus(SavedSong selectedSong)
 	{
 		boolean sourceSeparated = false;
 
 		if(selectedSong.checkHasBeatData() == true)
 		{
-			beatStatusIcon.setImage(tickIconImage);
-			analyseBeatButton.setDisable(true);
-			analyseBeatButton.setText("Complete");
+			beatStatus.setComplete();
 		}
 		else
 		{
-			beatStatusIcon.setImage(backgroundIconImage);
-			analyseBeatButton.setDisable(false);
-			analyseBeatButton.setText("Analyse");
+			beatStatus.setReady();
 		}
 
 		if(selectedSong.checkHasSeparatedAudio() == true)
@@ -165,15 +130,11 @@ public class Controller
 
 			if(selectedSong.checkHasPitchData() == true)
 			{
-				pitchStatusIcon.setImage(tickIconImage);
-				analysePitchButton.setDisable(true);
-				analysePitchButton.setText("Complete");
+				pitchStatus.setComplete();
 			}
 			else
 			{
-				pitchStatusIcon.setImage(backgroundIconImage);
-				analysePitchButton.setDisable(false);
-				analysePitchButton.setText("Analyse");
+				pitchStatus.setReady();
 			}
 			// if(selectedSong.checkHasOnsetData() == true) { OnsetStatusIcon.setImage(tickIconImage); }
 			// else { analyseOnsetButton.setDisable(false); }
@@ -183,9 +144,8 @@ public class Controller
 			sourceSeparationMenu.getChildren().clear();
 			sourceSeparationMenu.getChildren().add(separationProgressBar);
 			sourceSeparationButton.setDisable(false);
-			separationProgressBar.setProgress(0);
 
-			analysePitchButton.setDisable(true);
+			pitchStatus.setNotReady();
 		}
 	}
 
@@ -213,7 +173,7 @@ public class Controller
 		if(saveSuccessful)
 		{
 			SavedSong chosenSong = model1.getSelectedSong();
-			updateAnalyseStatus(chosenSong);
+			updateAnalysisStatus(chosenSong);
 			model1.setSelectedSong(chosenSong);
 		}
 		else
@@ -232,8 +192,8 @@ public class Controller
 	private void analyseBeat(ActionEvent event)
 	{
 		boolean detectionSuccessful = model1.analyseBeat();
-		if(detectionSuccessful) { beatStatusIcon.setImage(tickIconImage); }
-		else {beatStatusIcon.setImage(crossIconImage); }
+		if(detectionSuccessful) { beatStatus.setComplete(); }
+		else {beatStatus.setFailed(); }
 	}
 
 	@FXML
@@ -242,7 +202,7 @@ public class Controller
 		boolean detectionSuccessful = model1.runSourceSeparation();
 		if(detectionSuccessful)
 		{
-			updateAnalyseStatus(model1.getSelectedSong());
+			updateAnalysisStatus(model1.getSelectedSong());
 		}
 	}
 }
