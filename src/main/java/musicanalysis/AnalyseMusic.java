@@ -12,7 +12,7 @@ import java.nio.file.Path;
 
 public class AnalyseMusic
 {
-	public static float[] analyseBeat(Path audioFile)
+	public static float[] detectBeat(Path audioFile)
 	{
 		int size = 512;
 		int overlap = 256;
@@ -39,7 +39,7 @@ public class AnalyseMusic
 		return beats;
 	}
 
-	public static int[] analysePitch(Path audioFile)
+	public static int[] detectPitch(Path audioFile)
 	{
 		int size = 1024;
 		int overlap = 0;

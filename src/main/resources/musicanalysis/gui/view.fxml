@@ -10,65 +10,70 @@
 <?import javafx.scene.control.ListView?>
 <?import java.util.ArrayList?>
 <?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import java.net.URL?>
+
 
 <VBox	xmlns:fx="http://javafx.com/fxml"
 		fx:controller="musicanalysis.gui.Controller"
 		alignment="CENTER">
+	<stylesheets>
+		<URL value="@style.css" />
+	</stylesheets>
 	<GridPane gridLinesVisible="true" alignment="TOP_CENTER">
 		<columnConstraints>
 			<ColumnConstraints percentWidth="33.3" />
 			<ColumnConstraints percentWidth="33.3" />
 			<ColumnConstraints percentWidth="33.3" />
 		</columnConstraints>
-		<VBox spacing="10" GridPane.columnIndex="0" alignment="TOP_CENTER">
-			<padding>
-				<Insets left="20.0" right="20.0" bottom="20.0" top="20.0"/>
-			</padding>
-			<Label text="Choose New Song"/>
+		<VBox spacing="10" GridPane.columnIndex="0" alignment="TOP_CENTER" styleClass="padded-container">
+			<Label text="Choose New Song" styleClass="group-header"/>
 			<Button text="Choose File" onAction="#chooseFile"/>
 			<Label fx:id="fileNameLabel" text="Chosen Song: "/>
-			<Button text="Confirm"/>
+			<Button fx:id="confirmButton" text="Confirm" onAction="#confirmFile" disable="true"/>
 		</VBox>
-		<VBox spacing="10" GridPane.columnIndex="1" alignment="TOP_CENTER">
+		<VBox spacing="10" GridPane.columnIndex="1" alignment="TOP_CENTER" styleClass="padded-container">
 			<padding>
 				<Insets left="20.0" right="20.0" bottom="20.0" top="20.0"/>
 			</padding>
-			<Label text="Load Previous Song"/>
-			<ListView fx:id="savedSongsListView" maxHeight="200.0"/>
+			<Label text="Load Previous Song" styleClass="group-header"/>
+			<ListView fx:id="savedSongsListView" maxHeight="210.0"/>
 		</VBox>
-		<VBox fx:id="sourceSeparationMenu" visible="false" spacing="10" GridPane.columnIndex="2" alignment="TOP_CENTER">
+		<VBox spacing="10" GridPane.columnIndex="2" alignment="TOP_CENTER" styleClass="padded-container">
 			<padding>
 				<Insets left="20.0" right="20.0" bottom="20.0" top="20.0"/>
 			</padding>
-			<Label text="Source Separation"/>
-			<Label wrapText="true" text="Source separation is a pre-requisite for several of the analysis algorithms. It can take up to 10 minutes, so it is advisable to begin it as soon as possible. You only need to do it once per song." style="-fx-border-color: black; -fx-text-alignment: CENTER; -fx-padding: 10px"/>
-			<Button text="Begin Source Separation"/>
+			<Label text="Source Separation" styleClass="group-header"/>
+			<Label wrapText="true" text="Source separation is a prerequisite for several of the analysis algorithms. It can take up to 10 minutes, so it is advisable to begin it as soon as possible. You only need to do it once per song." style="-fx-border-color: black; -fx-text-alignment: CENTER; -fx-padding: 10px"/>
+			<Button fx:id="sourceSeparationButton" text="Begin Source Separation" onAction="#beginSourceSeparation"/>
+			<VBox fx:id="sourceSeparationMenu" alignment="CENTER">
+				<ProgressBar fx:id="separationProgressBar" />
+			</VBox>
 		</VBox>
 	</GridPane>
-<!-- 	<HBox spacing="10" alignment="TOP_LEFT">
-		<padding>
-			<Insets left="20.0" right="20.0" bottom="20.0" top="20.0"/>
-		</padding>
-	</HBox> -->
 	<GridPane gridLinesVisible="true" style="-fx-background-color: red" alignment="CENTER" VBox.vgrow="ALWAYS">
-		<HBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER">
+		<HBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER">
 			<Label text="BEAT"/>
 			<Button fx:id="analyseBeatButton" text="Analyse" onAction="#analyseBeat" disable="true"/>
+			<ImageView fx:id="beatStatusIcon"/>
 		</HBox>
-		<HBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER">
+		<HBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER">
 			<Label text="PITCH"/>
 			<Button fx:id="analysePitchButton" text="Analyse" onAction="#analysePitch" disable="true"/>
+			<ImageView fx:id="pitchStatusIcon"/>
 		</HBox>
 		<HBox spacing="10" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER">
-			<Label text="???"/>
-			<Button text="Run Source Separation"/>
+			<Label text="NOTE ONSETS"/>
+			<Button fx:id="analyseOnsetButton" text="Analyse" disable="true"/>
+			<ImageView fx:id="onsetStatusIcon"/>
 		</HBox>
 	</GridPane>
-	<fx:define>
+<!-- 	<fx:define>
 		<ArrayList fx:id="analyseButtons">
 			<fx:reference source="analyseBeatButton" /> 
 			<fx:reference source="analysePitchButton" />
 		</ArrayList>
-	</fx:define>
+	</fx:define> -->
 </VBox>
 

@@ -13,6 +13,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.text.Text;
 
 
 import java.io.File;
@@ -25,23 +29,74 @@ public class Controller
 	private Label fileNameLabel;
 
 	@FXML
-	private VBox sourceSeparationMenu;
-
-	@FXML
-	private ArrayList<Button> analyseButtons;
+	private Button confirmButton;
 
 	@FXML
 	private ListView<SavedSong> savedSongsListView;
 
-	private ObservableList<SavedSong> savedSongs;
+	@FXML
+	private VBox sourceSeparationMenu;
+
+	@FXML
+	private Button sourceSeparationButton;
+
+	@FXML
+	private ProgressBar separationProgressBar;
+
+	@FXML
+	private ImageView beatStatusIcon;
+
+	@FXML
+	private ImageView pitchStatusIcon;
+
+	@FXML
+	private ImageView onsetStatusIcon;
+
+	@FXML
+	private Button analyseBeatButton;
+
+	@FXML
+	private Button analysePitchButton;
+
+	@FXML
+	private Button analyseOnsetButton;
+
+	private File chosenFile;
+	private Label separationProgressLabel;
 
 	private Model model1 = new Model();
 
+	private static Image backgroundIconImage;
+	private static Image tickIconImage;
+	private static Image crossIconImage;
+
+	static
+	{
+		try
+		{
+			backgroundIconImage = new Image(GUI.class.getResource("background_icon.png").toString());
+			tickIconImage = new Image(GUI.class.getResource("tick_icon.png").toString());
+			crossIconImage = new Image(GUI.class.getResource("cross_icon.png").toString());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
 	public void initialize()
 	{
-		model1.populateLoadList();
-		savedSongs = FXCollections.observableArrayList(model1.getSavedSongs());
-		savedSongsListView.setItems(savedSongs);
+		initialiseIcon(beatStatusIcon);
+		initialiseIcon(pitchStatusIcon);
+		initialiseIcon(onsetStatusIcon);
+
+		initialiseButtons();
+
+		separationProgressLabel = new Label("Source Separation Successful! :)");
+		separationProgressBar.setProgress(0);
+
+
+		savedSongsListView.setItems(model1.getSavedSongs());
 
 		savedSongsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SavedSong>()
 		{
@@ -49,14 +104,35 @@ public class Controller
 			public void changed(ObservableValue<? extends SavedSong> observable, SavedSong oldValue, SavedSong newValue)
 			{
 			if (newValue != null)
-			{
-				SavedSong selectedSong = savedSongsListView.getSelectionModel().getSelectedItem();
-				setFileNameLabel(selectedSong.toString());
-				enableAnalyseButtons();
-				showSourceSeparationMenu();
-			}
+				{
+					SavedSong selectedSong = savedSongsListView.getSelectionModel().getSelectedItem();
+					model1.setSelectedSong(selectedSong);
+					updateAnalyseStatus(selectedSong);
+				}
             }
         });
+	}
+
+	private void initialiseIcon(ImageView currentIcon)
+	{
+		currentIcon.setImage(backgroundIconImage);
+		currentIcon.setFitWidth(25);
+		currentIcon.setPreserveRatio(true);
+		currentIcon.setCache(true);
+	}
+
+	private void initialiseButtons()
+	{
+		Text buttonSizeText = new Text("Complete");
+		buttonSizeText.setFont(analyseBeatButton.getFont());
+		double textWidth = buttonSizeText.getBoundsInLocal().getWidth();
+		double widthWithPadding = textWidth + 20;
+		analyseBeatButton.setMinWidth(widthWithPadding);
+		analyseBeatButton.setMaxWidth(widthWithPadding);
+		analysePitchButton.setMinWidth(widthWithPadding);
+		analysePitchButton.setMaxWidth(widthWithPadding);
+		analyseOnsetButton.setMinWidth(widthWithPadding);
+		analyseOnsetButton.setMaxWidth(widthWithPadding);
 	}
 
 	private void setFileNameLabel(String labelString)
@@ -64,30 +140,85 @@ public class Controller
 		fileNameLabel.setText("Chosen Song: " + labelString);
 	}
 
-	private void enableAnalyseButtons()
+	private void updateAnalyseStatus(SavedSong selectedSong)
 	{
-		for(Button analysisButton : analyseButtons)
+		boolean sourceSeparated = false;
+
+		if(selectedSong.checkHasBeatData() == true)
 		{
-			analysisButton.setDisable(false);
+			beatStatusIcon.setImage(tickIconImage);
+			analyseBeatButton.setDisable(true);
+			analyseBeatButton.setText("Complete");
+		}
+		else
+		{
+			beatStatusIcon.setImage(backgroundIconImage);
+			analyseBeatButton.setDisable(false);
+			analyseBeatButton.setText("Analyse");
+		}
+
+		if(selectedSong.checkHasSeparatedAudio() == true)
+		{
+			sourceSeparationMenu.getChildren().clear();
+			sourceSeparationMenu.getChildren().add(separationProgressLabel);
+			sourceSeparationButton.setDisable(true);
+
+			if(selectedSong.checkHasPitchData() == true)
+			{
+				pitchStatusIcon.setImage(tickIconImage);
+				analysePitchButton.setDisable(true);
+				analysePitchButton.setText("Complete");
+			}
+			else
+			{
+				pitchStatusIcon.setImage(backgroundIconImage);
+				analysePitchButton.setDisable(false);
+				analysePitchButton.setText("Analyse");
+			}
+			// if(selectedSong.checkHasOnsetData() == true) { OnsetStatusIcon.setImage(tickIconImage); }
+			// else { analyseOnsetButton.setDisable(false); }
+		}
+		else
+		{
+			sourceSeparationMenu.getChildren().clear();
+			sourceSeparationMenu.getChildren().add(separationProgressBar);
+			sourceSeparationButton.setDisable(false);
+			separationProgressBar.setProgress(0);
+
+			analysePitchButton.setDisable(true);
 		}
 	}
 
-	private void showSourceSeparationMenu()
-	{
-		sourceSeparationMenu.setVisible(true);
-	}
 
 	@FXML
 	private void chooseFile(ActionEvent event)
 	{
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Resource File");
-		File selectedFile = fileChooser.showOpenDialog(null);
+		chosenFile = fileChooser.showOpenDialog(null);
 
-		if (selectedFile != null)
+		if (chosenFile != null)
 		{
-			model1.setChosenFile(selectedFile);
-			setFileNameLabel(selectedFile.getName());
+			setFileNameLabel(chosenFile.getName());
+			confirmButton.setDisable(false);
+		}
+		else { confirmButton.setDisable(true); }
+	}
+
+	@FXML
+	private void confirmFile(ActionEvent event)
+	{
+		boolean saveSuccessful = model1.saveFile(chosenFile);
+
+		if(saveSuccessful)
+		{
+			SavedSong chosenSong = model1.getSelectedSong();
+			updateAnalyseStatus(chosenSong);
+			model1.setSelectedSong(chosenSong);
+		}
+		else
+		{
+			System.err.println("Error with file");
 		}
 	}
 
@@ -100,6 +231,19 @@ public class Controller
 	@FXML
 	private void analyseBeat(ActionEvent event)
 	{
-		model1.analyseBeat();
+		boolean detectionSuccessful = model1.analyseBeat();
+		if(detectionSuccessful) { beatStatusIcon.setImage(tickIconImage); }
+		else {beatStatusIcon.setImage(crossIconImage); }
+	}
+
+	@FXML
+	private void beginSourceSeparation(ActionEvent event)
+	{
+		boolean detectionSuccessful = model1.runSourceSeparation();
+		if(detectionSuccessful)
+		{
+			updateAnalyseStatus(model1.getSelectedSong());
+		}
 	}
 }
+

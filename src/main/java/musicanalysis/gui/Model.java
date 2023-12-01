@@ -4,56 +4,57 @@ import musicanalysis.io.LoadFile;
 import musicanalysis.io.LoadData;
 import musicanalysis.io.SavedSong;
 import musicanalysis.AnalyseMusic;
+import musicanalysis.SeparateTracks;
 
 import java.util.ArrayList;
+import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.Files;
 import java.io.File;
 import java.util.List;
+import java.net.URL;
 
 
 public class Model
 {
 	private Path dataDirectory;
-	private ArrayList<SavedSong> savedSongs;
-	private Path sourceFile;
+	private Path demucsPath;
+
+	private ObservableList<SavedSong> savedSongs;
+	private SavedSong selectedSong;
 
 	public Model()
 	{
-		savedSongs = new ArrayList<SavedSong>();
+		savedSongs = FXCollections.observableArrayList(new ArrayList<SavedSong>());
 		Path currentDirectory = Paths.get(System.getProperty("user.dir"));
 		this.dataDirectory = LoadFile.getDirectory(currentDirectory,"data");
+
+		try
+		{
+			URL demucsPathURL = SeparateTracks.class.getResource("RunDemucs/RunDemucs.exe");
+			this.demucsPath = Paths.get(demucsPathURL.toURI());
+			if(!Files.exists(demucsPath)){ this.demucsPath = null; }
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
-	public File getChosenFile()
+	public SavedSong getSelectedSong()
 	{
-		return sourceFile.toFile();
+		return selectedSong;
 	}
 
-	public ArrayList<SavedSong> getSavedSongs()
+	public void setSelectedSong(SavedSong selectedSong)
 	{
-		return savedSongs;
+		this.selectedSong = selectedSong;
 	}
 
-	public void setChosenFile(File chosenFile)
-	{
-		this.sourceFile = chosenFile.toPath();
-	}
-
-	public void saveFile()
-	{
-		String fullFileName = sourceFile.getFileName().toString();
-		String[] splitFileName = fullFileName.split("\\.");
-
-		String fileName = splitFileName[0];
-		Path storageDirectory = LoadFile.getDirectory(dataDirectory, fileName);
-		Path savedFile = LoadFile.storeFile(sourceFile, storageDirectory, fullFileName);
-
-		//If savedFile isn't null, add to List of Songs
-	}
-
-	public void populateLoadList()
+	public ObservableList<SavedSong> getSavedSongs()
 	{
 		List<Path> storageDirectories = LoadFile.listStorageDirectories(dataDirectory);
 		for(Path storageDirectory : storageDirectories)
@@ -67,11 +68,55 @@ public class Model
 				savedSongs.add(currentSavedSong);
 			}
 		}
+
+		return savedSongs;
 	}
 
-	public void getLoadList()
+	public boolean saveFile(File chosenFile)
 	{
+		Path chosenFilePath = chosenFile.toPath();
+		String fullFileName = chosenFilePath.getFileName().toString();
+		String[] splitFileName = fullFileName.split("\\.");
 
+		String fileName = splitFileName[0];
+		Path storageDirectory = LoadFile.getDirectory(dataDirectory, fileName);
+		Path savedFile = LoadFile.storeFile(chosenFilePath, storageDirectory, fullFileName);
+
+		boolean saveSuccessful = false;
+		if(savedFile != null)
+		{
+			SavedSong currentSavedSong = new SavedSong(fileName, storageDirectory, savedFile);
+			savedSongs.add(currentSavedSong);
+			saveSuccessful = true;
+		}
+
+
+		return saveSuccessful;
+	}
+
+	public boolean runSourceSeparation()
+	{
+		Path selectedSongFile = selectedSong.getSongFile();
+		boolean separationSuccessful = false;
+
+		if(demucsPath != null)
+		{
+			separationSuccessful = SeparateTracks.separateAudioFile(demucsPath, selectedSongFile, dataDirectory);
+			if(!separationSuccessful)
+			{
+				System.err.println("Error in source separation");
+			}
+			else
+			{
+				selectedSong.setHasSeparatedAudio(true);
+			}
+		}
+		else
+		{
+			System.err.println("Demucs source separation model not found.");
+		}
+
+		return separationSuccessful;
 	}
 
 	public void analysePitch()
@@ -82,15 +127,21 @@ public class Model
 		// LoadData.writePitchData(pitchData, pitchDataFile);
 	}
 
-	public void analyseBeat()
+	public boolean analyseBeat()
 	{
-		// saveFile();
-		// float[] beatData = AnalyseMusic.analyseBeat(savedFile);
-		// beatDataFile = storageDirectory.resolve("beatData.csv");
+		Path selectedSongFile = selectedSong.getSongFile();
+		float[] beatData = AnalyseMusic.detectBeat(selectedSongFile);
+		boolean detectionSuccessful = false;
 
-		// if(beatData != null)
-		// {
-		// 	LoadData.writeBeatData(beatData, beatDataFile);
-		// }
+		if(beatData != null)
+		{
+			Path beatDataFile = selectedSong.getBeatDataFile();
+			LoadData.writeBeatData(beatData, beatDataFile);
+			//Should probably in boolean return value to LoadData to check for errors
+			selectedSong.setBeatDataFile(beatDataFile);
+			detectionSuccessful = true;
+		}
+
+		return detectionSuccessful;
 	}
 }
