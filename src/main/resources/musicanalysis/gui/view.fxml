@@ -13,6 +13,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.control.ProgressBar?>
 <?import java.net.URL?>
+<?import javafx.scene.control.ChoiceBox?>
 
 
 <VBox	xmlns:fx="http://javafx.com/fxml"
@@ -60,11 +61,13 @@
 			<Button fx:id="analyseBeatButton" text="Analyse" onAction="#analyseBeat" disable="true"/>
 			<ImageView fx:id="beatStatusIcon"/>
 			<Label fx:id="beatStatusLabel"/>
+			<Button fx:id="previewBeatButton" text="Preview" onAction="#launchPreview"/>
 		</HBox>
 		<HBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER_RIGHT">
 			<Label text="PITCH" styleClass="header, padded-container"/>
 		</HBox>
 		<HBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER_LEFT">
+			<ChoiceBox />
 			<Button fx:id="analysePitchButton" text="Analyse" onAction="#analysePitch" disable="true"/>
 			<ImageView fx:id="pitchStatusIcon"/>
 			<Label fx:id="pitchStatusLabel"/>

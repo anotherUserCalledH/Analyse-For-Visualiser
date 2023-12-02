@@ -205,5 +205,18 @@ public class Controller
 			updateAnalysisStatus(model1.getSelectedSong());
 		}
 	}
+
+	@FXML
+	private void launchPreview(ActionEvent event)
+	{
+		try
+		{
+			PreviewWindow preview = new PreviewWindow();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 }
 

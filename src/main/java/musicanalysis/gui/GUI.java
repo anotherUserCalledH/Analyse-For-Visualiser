@@ -27,15 +27,17 @@ public class GUI extends Application
 		primaryStage.setTitle("GUI :)");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-
-
-		//Init stuff
-		Logger logger = Logger.getLogger("");
-		logger.setLevel(Level.WARNING);
 	}
 
 	public static void main(String[] args)
 	{
 		launch(args);
+	}
+
+	@Override
+	public void init()
+	{
+		Logger logger = Logger.getLogger("");
+		logger.setLevel(Level.WARNING);
 	}
 }
