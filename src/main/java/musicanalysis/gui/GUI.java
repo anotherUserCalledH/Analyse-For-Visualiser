@@ -26,6 +26,7 @@ public class GUI extends Application
 
 		primaryStage.setTitle("GUI :)");
 		primaryStage.setScene(scene);
+		primaryStage.setOnCloseRequest(event -> System.exit(0));
 		primaryStage.show();
 	}
 

@@ -16,7 +16,12 @@ public class PreviewController
 
 	public PreviewController()
 	{
-		isPaused = false;
+		isPaused = true;
+	}
+
+	public void setPreviewVisualiser(PreviewVisualiser previewVisualiser1)
+	{
+		this.previewVisualiser1 = previewVisualiser1;
 	}
 
 	@FXML
@@ -36,8 +41,8 @@ public class PreviewController
 		}
 	}
 
-	public void setPreviewVisualiser(PreviewVisualiser previewVisualiser1)
+	public void shutdown()
 	{
-		this.previewVisualiser1 = previewVisualiser1;
+		previewVisualiser1.pauseVisualiser();
 	}
 }

@@ -2,7 +2,7 @@ package musicanalysis.gui;
 
 import musicanalysis.preview.PreviewVisualiser;
 import musicanalysis.preview.VisualiserEffect;
-import musicanalysis.preview.PreviewType;
+// import musicanalysis.preview.PreviewType;
 import musicanalysis.preview.BeatMarker;
 
 import javafx.scene.layout.Pane;
@@ -19,7 +19,14 @@ import java.nio.file.Path;
 
 public class LaunchPreviewWindow
 {
-	public static void launch(Path songPath, PreviewType previewType1, float[] dataArray) throws Exception
+	public enum PreviewType
+	{
+		BEAT,
+		PITCH,
+		ONSET
+	}
+
+	public static VisualiserEffect launch(Path songPath, PreviewType previewType1) throws Exception
 	{
 		FXMLLoader fxmlLoader1 = new FXMLLoader(GUI.class.getResource("previewWindow.fxml"));
 		Pane root = fxmlLoader1.load();
@@ -36,7 +43,7 @@ public class LaunchPreviewWindow
 		switch(previewType1)
 		{
 			case BEAT:
-				effect = new BeatMarker(context, canvasWidth, canvasHeight, dataArray);
+				effect = new BeatMarker(context, canvasWidth, canvasHeight);
 				break;
 		}
 
@@ -48,6 +55,15 @@ public class LaunchPreviewWindow
 		stage1.setScene(new Scene(root));
 		stage1.initModality(Modality.APPLICATION_MODAL);
 		stage1.setResizable(false);
+		stage1.setOnHidden(event -> previewController1.shutdown());
 		stage1.show();
+
+		return effect;
+	}
+
+	public static void launchBeatPreview(Path songPath, float[] beatArray) throws Exception
+	{
+		BeatMarker effect = (BeatMarker) launch(songPath, PreviewType.BEAT);
+		effect.setData(beatArray);
 	}
 }

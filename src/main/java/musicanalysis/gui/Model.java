@@ -87,8 +87,10 @@ public class Model
 		{
 			SavedSong currentSavedSong = new SavedSong(fileName, storageDirectory, savedFile);
 			savedSongs.add(currentSavedSong);
+			setSelectedSong(currentSavedSong);
 			saveSuccessful = true;
 		}
+
 
 
 		return saveSuccessful;

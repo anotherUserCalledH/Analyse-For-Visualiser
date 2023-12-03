@@ -22,7 +22,7 @@ public class BeatMarker implements VisualiserEffect
 	private Color markerColour = Color.RED;
 	private Color backgroundColour = Color.BLACK;
 
-	public BeatMarker(GraphicsContext context, int canvasWidth, int canvasHeight, float[] beatTimes)
+	public BeatMarker(GraphicsContext context, int canvasWidth, int canvasHeight)
 	{
 		this.context = context;
 		this.WIDTH = canvasWidth;
@@ -36,6 +36,11 @@ public class BeatMarker implements VisualiserEffect
 
 		this.beatIndex = 0;
 		this.locationIndex = 0;
+	}
+
+	public void setData(float[] beatTimes)
+	{
+		this.beatTimes = beatTimes;
 	}
 
 	public void refreshCanvas()

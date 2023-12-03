@@ -1,7 +1,6 @@
 package musicanalysis.gui;
 
 import musicanalysis.io.SavedSong;
-import musicanalysis.preview.PreviewType;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -175,7 +174,6 @@ public class Controller
 		{
 			SavedSong chosenSong = model1.getSelectedSong();
 			updateAnalysisStatus(chosenSong);
-			model1.setSelectedSong(chosenSong);
 		}
 		else
 		{
@@ -215,7 +213,7 @@ public class Controller
 
 		try
 		{
-			LaunchPreviewWindow.launch(songPath, PreviewType.BEAT, beatData);
+			LaunchPreviewWindow.launchBeatPreview(songPath, beatData);
 		}
 		catch(Exception e)
 		{
