@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 public class PreviewController
 {
 	@FXML
-	private Button johnsButton;
+	private Button playPauseButton;
 
 	private boolean isPaused;
 
@@ -26,13 +26,13 @@ public class PreviewController
 		{
 			previewVisualiser1.playVisualiser();
 			isPaused = false;
-			johnsButton.setText("Pause");
+			playPauseButton.setText("Pause");
 		}
 		else
 		{
 			previewVisualiser1.pauseVisualiser();
 			isPaused = true;
-			johnsButton.setText("Play");
+			playPauseButton.setText("Play");
 		}
 	}
 

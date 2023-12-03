@@ -35,16 +35,10 @@
 			<Button fx:id="confirmButton" text="Confirm" onAction="#confirmFile" disable="true"/>
 		</VBox>
 		<VBox spacing="10" GridPane.columnIndex="1" alignment="TOP_CENTER" styleClass="padded-container">
-			<padding>
-				<Insets left="20.0" right="20.0" bottom="20.0" top="20.0"/>
-			</padding>
 			<Label text="Load Previous Song" styleClass="header"/>
 			<ListView fx:id="savedSongsListView" maxHeight="210.0"/>
 		</VBox>
 		<VBox spacing="10" GridPane.columnIndex="2" alignment="TOP_CENTER" styleClass="padded-container">
-			<padding>
-				<Insets left="20.0" right="20.0" bottom="20.0" top="20.0"/>
-			</padding>
 			<Label text="Source Separation" styleClass="header"/>
 			<Label wrapText="true" text="Source separation is a prerequisite for several of the analysis algorithms. It can take up to 10 minutes, so it is advisable to begin it as soon as possible. You only need to do it once per song." style="-fx-border-color: black; -fx-text-alignment: CENTER; -fx-padding: 10px"/>
 			<Button fx:id="sourceSeparationButton" text="Begin Source Separation" onAction="#beginSourceSeparation"/>
@@ -54,33 +48,40 @@
 		</VBox>
 	</GridPane>
 	<GridPane gridLinesVisible="true" style="-fx-background-color: red" alignment="CENTER" VBox.vgrow="ALWAYS">
-		<HBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="0" alignment="CENTER_RIGHT">
-			<Label text="BEAT" styleClass="header, padded-container"/>
+		<HBox GridPane.rowIndex="0" GridPane.columnIndex="0" alignment="CENTER_RIGHT" styleClass="padded-container">
+			<Label text="BEAT" styleClass="header"/>
 		</HBox>
-		<HBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER_LEFT">
+		<HBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="2" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER_LEFT">
 			<Button fx:id="analyseBeatButton" text="Analyse" onAction="#analyseBeat" disable="true"/>
 			<ImageView fx:id="beatStatusIcon"/>
 			<Label fx:id="beatStatusLabel"/>
-			<Button fx:id="previewBeatButton" text="Preview" onAction="#launchPreview"/>
 		</HBox>
-		<HBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER_RIGHT">
+		<HBox GridPane.rowIndex="0" GridPane.columnIndex="3" alignment="CENTER" styleClass="padded-container">
+			<Button fx:id="previewBeatButton" text="Preview" onAction="#launchBeatPreview"/>
+		</HBox>
+		<HBox GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER_RIGHT">
 			<Label text="PITCH" styleClass="header, padded-container"/>
 		</HBox>
-		<HBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER_LEFT">
-			<ChoiceBox />
+		<HBox GridPane.rowIndex="1" GridPane.columnIndex="1" alignment="CENTER" styleClass="padded-container">
+			<ChoiceBox/>
+		</HBox>
+		<HBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="2" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER_LEFT">
 			<Button fx:id="analysePitchButton" text="Analyse" onAction="#analysePitch" disable="true"/>
 			<ImageView fx:id="pitchStatusIcon"/>
 			<Label fx:id="pitchStatusLabel"/>
 		</HBox>
-		<HBox spacing="10" GridPane.rowIndex="2" GridPane.columnIndex="0" alignment="CENTER_RIGHT">
-			<Label text="NOTE ONSETS" styleClass="header, padded-container"/>
+		<HBox GridPane.rowIndex="2" GridPane.columnIndex="0" alignment="CENTER_RIGHT" styleClass="padded-container">
+			<Label text="NOTE ONSETS" styleClass="header"/>
 		</HBox>
-		<HBox spacing="10" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER_LEFT">
+		<HBox spacing="10" GridPane.rowIndex="2" GridPane.columnIndex="2" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER_LEFT">
 			<Button fx:id="analyseOnsetButton" text="Analyse" disable="true"/>
 			<ImageView fx:id="onsetStatusIcon"/>
 			<Label fx:id="onsetStatusLabel"/>
 		</HBox>
 	</GridPane>
+<!-- 			<padding>
+				<Insets left="20.0" right="20.0" bottom="20.0" top="20.0"/>
+			</padding> -->
 <!-- 	<fx:define>
 		<ArrayList fx:id="analyseButtons">
 			<fx:reference source="analyseBeatButton" /> 

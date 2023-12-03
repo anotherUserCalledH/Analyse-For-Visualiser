@@ -144,4 +144,17 @@ public class Model
 
 		return detectionSuccessful;
 	}
+
+	public float[] getBeatData()
+	{
+		float[] beatData = null;
+
+		if(selectedSong.checkHasBeatData())
+		{
+			Path beatDataFile = selectedSong.getBeatDataFile();
+			beatData = LoadData.readBeatData(beatDataFile);
+		}
+
+		return beatData;
+	}
 }

@@ -1,6 +1,7 @@
 package musicanalysis.gui;
 
 import musicanalysis.io.SavedSong;
+import musicanalysis.preview.PreviewType;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,7 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.scene.control.ProgressBar;
 
-
+import java.nio.file.Path;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -193,7 +194,7 @@ public class Controller
 	{
 		boolean detectionSuccessful = model1.analyseBeat();
 		if(detectionSuccessful) { beatStatus.setComplete(); }
-		else {beatStatus.setFailed(); }
+		else { beatStatus.setFailed(); }
 	}
 
 	@FXML
@@ -207,11 +208,14 @@ public class Controller
 	}
 
 	@FXML
-	private void launchPreview(ActionEvent event)
+	private void launchBeatPreview(ActionEvent event)
 	{
+		Path songPath = model1.getSelectedSong().getSongFile();
+		float[] beatData = model1.getBeatData();
+
 		try
 		{
-			PreviewWindow preview = new PreviewWindow();
+			LaunchPreviewWindow.launch(songPath, PreviewType.BEAT, beatData);
 		}
 		catch(Exception e)
 		{
