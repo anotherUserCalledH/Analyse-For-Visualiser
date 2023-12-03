@@ -55,10 +55,10 @@
 			<Button fx:id="analyseBeatButton" text="Analyse" onAction="#analyseBeat" disable="true"/>
 			<ImageView fx:id="beatStatusIcon"/>
 			<Label fx:id="beatStatusLabel"/>
+			<Button fx:id="previewBeatButton" text="Preview" onAction="#launchBeatPreview" visible="false"/>
 		</HBox>
-		<HBox GridPane.rowIndex="0" GridPane.columnIndex="3" alignment="CENTER" styleClass="padded-container">
-			<Button fx:id="previewBeatButton" text="Preview" onAction="#launchBeatPreview"/>
-		</HBox>
+		<!-- <HBox GridPane.rowIndex="0" GridPane.columnIndex="3" alignment="CENTER" styleClass="padded-container"> -->
+		<!-- </HBox> -->
 		<HBox GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER_RIGHT">
 			<Label text="PITCH" styleClass="header, padded-container"/>
 		</HBox>
@@ -69,6 +69,7 @@
 			<Button fx:id="analysePitchButton" text="Analyse" onAction="#analysePitch" disable="true"/>
 			<ImageView fx:id="pitchStatusIcon"/>
 			<Label fx:id="pitchStatusLabel"/>
+			<Button fx:id="previewPitchButton" text="Preview" visible="false"/>
 		</HBox>
 		<HBox GridPane.rowIndex="2" GridPane.columnIndex="0" alignment="CENTER_RIGHT" styleClass="padded-container">
 			<Label text="NOTE ONSETS" styleClass="header"/>
@@ -77,6 +78,7 @@
 			<Button fx:id="analyseOnsetButton" text="Analyse" disable="true"/>
 			<ImageView fx:id="onsetStatusIcon"/>
 			<Label fx:id="onsetStatusLabel"/>
+			<Button fx:id="previewOnsetButton" text="Preview" visible="false"/>
 		</HBox>
 	</GridPane>
 <!-- 			<padding>

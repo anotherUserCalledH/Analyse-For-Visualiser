@@ -75,6 +75,15 @@ public class Controller
 	@FXML
 	private Label onsetStatusLabel;
 
+	@FXML
+	private Button previewBeatButton;
+
+	@FXML
+	private Button previewPitchButton;
+
+	@FXML
+	private Button previewOnsetButton;
+
 	private File chosenFile;
 	private PitchProcessor.PitchEstimationAlgorithm chosenPitchAlgorithm;
 	private Label separationProgressLabel;
@@ -87,9 +96,9 @@ public class Controller
 
 	public void initialize()
 	{
-		beatStatus = new AnalysisStatus(analyseBeatButton, beatStatusIcon, beatStatusLabel);
-		pitchStatus = new AnalysisStatus(analysePitchButton, pitchStatusIcon, pitchStatusLabel);
-		onsetStatus = new AnalysisStatus(analyseOnsetButton, onsetStatusIcon, onsetStatusLabel);
+		beatStatus = new AnalysisStatus(analyseBeatButton, beatStatusIcon, beatStatusLabel, previewBeatButton);
+		pitchStatus = new AnalysisStatus(analysePitchButton, pitchStatusIcon, pitchStatusLabel, previewPitchButton);
+		onsetStatus = new AnalysisStatus(analyseOnsetButton, onsetStatusIcon, onsetStatusLabel, previewOnsetButton);
 
 		separationProgressLabel = new Label("Source Separation Successful! :)");
 		separationProgressBar.setProgress(0);
@@ -125,6 +134,10 @@ public class Controller
 			if (newValue != null)
 				{
 					chosenPitchAlgorithm = (PitchProcessor.PitchEstimationAlgorithm) pitchAlgorithmsChoiceBox.getSelectionModel().getSelectedItem();
+					if(model1.getSelectedSong().checkHasSeparatedAudio())
+					{
+						pitchStatus.setReady();
+					}
 				}
 			}
 		});

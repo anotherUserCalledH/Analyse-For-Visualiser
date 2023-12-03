@@ -2,6 +2,7 @@ package musicanalysis.preview;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 
 public class BeatMarker implements VisualiserEffect
 {
@@ -22,6 +23,8 @@ public class BeatMarker implements VisualiserEffect
 	private Color markerColour = Color.RED;
 	private Color backgroundColour = Color.BLACK;
 
+	private Image backgroundImage = null;
+
 	public BeatMarker(GraphicsContext context, int canvasWidth, int canvasHeight)
 	{
 		this.context = context;
@@ -36,6 +39,15 @@ public class BeatMarker implements VisualiserEffect
 
 		this.beatIndex = 0;
 		this.locationIndex = 0;
+
+		try
+		{
+			backgroundImage = new Image(BeatMarker.class.getResource("background.png").toString());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public void setData(float[] beatTimes)
@@ -45,10 +57,12 @@ public class BeatMarker implements VisualiserEffect
 
 	public void refreshCanvas()
 	{
-		context.save();
-		context.setFill(backgroundColour);
-		context.fillRect(0, 0, WIDTH, HEIGHT);
-		context.restore();
+		context.drawImage(backgroundImage, 0, 0, WIDTH, HEIGHT);
+
+		// context.save();
+		// context.setFill(backgroundColour);
+		// context.fillRect(0, 0, WIDTH, HEIGHT);
+		// context.restore();
 	}
 
 	public void drawMarker(float posX, float posY)
