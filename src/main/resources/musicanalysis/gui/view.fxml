@@ -63,7 +63,7 @@
 			<Label text="PITCH" styleClass="header, padded-container"/>
 		</HBox>
 		<HBox GridPane.rowIndex="1" GridPane.columnIndex="1" alignment="CENTER" styleClass="padded-container">
-			<ChoiceBox/>
+			<ChoiceBox fx:id="pitchAlgorithmsChoiceBox"/>
 		</HBox>
 		<HBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="2" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER_LEFT">
 			<Button fx:id="analysePitchButton" text="Analyse" onAction="#analysePitch" disable="true"/>

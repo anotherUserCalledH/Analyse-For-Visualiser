@@ -39,12 +39,11 @@ public class AnalyseMusic
 		return beats;
 	}
 
-	public static int[] detectPitch(Path audioFile)
+	public static int[] detectPitch(Path audioFile, PitchProcessor.PitchEstimationAlgorithm algorithm)
 	{
 		int size = 1024;
 		int overlap = 0;
 		int sampleRate = 16000;
-		PitchProcessor.PitchEstimationAlgorithm algorithm = PitchProcessor.PitchEstimationAlgorithm.FFT_YIN;
 
 		String stringPath = audioFile.toAbsolutePath().toString();
 
@@ -60,3 +59,5 @@ public class AnalyseMusic
 		return pitches;
 	}
 }
+
+ //FXCollections.observableArrayList("YIN", "McLeod Pitch Method", "Yin FFT", "Dynamic Wavelet", "Spectrum Energy", "AMDF Function", "Chunky Yin");

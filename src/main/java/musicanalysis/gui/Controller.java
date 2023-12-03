@@ -2,6 +2,8 @@ package musicanalysis.gui;
 
 import musicanalysis.io.SavedSong;
 
+import be.tarsos.dsp.pitch.PitchProcessor;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
@@ -16,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ChoiceBox;
 
 import java.nio.file.Path;
 import java.io.File;
@@ -41,6 +44,9 @@ public class Controller
 
 	@FXML
 	private ProgressBar separationProgressBar;
+
+	@FXML
+	private ChoiceBox pitchAlgorithmsChoiceBox;
 
 	@FXML
 	private Button analyseBeatButton;
@@ -70,6 +76,7 @@ public class Controller
 	private Label onsetStatusLabel;
 
 	private File chosenFile;
+	private PitchProcessor.PitchEstimationAlgorithm chosenPitchAlgorithm;
 	private Label separationProgressLabel;
 	private AnalysisStatus beatStatus;
 	private AnalysisStatus pitchStatus;
@@ -100,8 +107,28 @@ public class Controller
 					model1.setSelectedSong(selectedSong);
 					updateAnalysisStatus(selectedSong);
 				}
-            }
-        });
+			}
+		});
+
+		ObservableList<PitchProcessor.PitchEstimationAlgorithm> pitchAlgorithms = FXCollections.observableArrayList();
+		for(PitchProcessor.PitchEstimationAlgorithm pitchAlgorithm : PitchProcessor.PitchEstimationAlgorithm.values())
+		{
+			pitchAlgorithms.add(pitchAlgorithm);
+		}
+		pitchAlgorithmsChoiceBox.setItems(pitchAlgorithms);
+
+		pitchAlgorithmsChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PitchProcessor.PitchEstimationAlgorithm>()
+		{
+			@Override
+			public void changed(ObservableValue<? extends PitchProcessor.PitchEstimationAlgorithm> observable, PitchProcessor.PitchEstimationAlgorithm oldValue, PitchProcessor.PitchEstimationAlgorithm newValue)
+			{
+			if (newValue != null)
+				{
+					chosenPitchAlgorithm = (PitchProcessor.PitchEstimationAlgorithm) pitchAlgorithmsChoiceBox.getSelectionModel().getSelectedItem();
+				}
+			}
+		});
+
 	}
 
 	private void setFileNameLabel(String labelString)
@@ -184,7 +211,8 @@ public class Controller
 	@FXML
 	private void analysePitch(ActionEvent event)
 	{
-		model1.analysePitch();
+		model1.analysePitch(chosenPitchAlgorithm);
+		pitchStatus.setComplete();
 	}
 
 	@FXML

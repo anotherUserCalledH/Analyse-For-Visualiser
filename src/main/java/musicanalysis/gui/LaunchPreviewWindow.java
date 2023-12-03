@@ -21,9 +21,7 @@ public class LaunchPreviewWindow
 {
 	public enum PreviewType
 	{
-		BEAT,
-		PITCH,
-		ONSET
+		BEAT, PITCH, ONSET
 	}
 
 	public static VisualiserEffect launch(Path songPath, PreviewType previewType1) throws Exception

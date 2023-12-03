@@ -6,6 +6,8 @@ import musicanalysis.io.SavedSong;
 import musicanalysis.AnalyseMusic;
 import musicanalysis.SeparateTracks;
 
+import be.tarsos.dsp.pitch.PitchProcessor;
+
 import java.util.ArrayList;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
@@ -28,7 +30,7 @@ public class Model
 
 	public Model()
 	{
-		savedSongs = FXCollections.observableArrayList(new ArrayList<SavedSong>());
+		savedSongs = FXCollections.observableArrayList();//new ArrayList<SavedSong>());
 		Path currentDirectory = Paths.get(System.getProperty("user.dir"));
 		this.dataDirectory = LoadFile.getDirectory(currentDirectory,"data");
 
@@ -121,12 +123,14 @@ public class Model
 		return separationSuccessful;
 	}
 
-	public void analysePitch()
+	public void analysePitch(PitchProcessor.PitchEstimationAlgorithm pitchAlgorithm)
 	{
-		// saveFile();
-		// int[] pitchData = AnalyseMusic.analysePitch(savedFile);
-		// pitchDataFile = storageDirectory.resolve("pitchData.csv");
-		// LoadData.writePitchData(pitchData, pitchDataFile);
+		Path selectedSongFile = selectedSong.getSongFile();
+		int[] pitchData = AnalyseMusic.detectPitch(selectedSongFile, pitchAlgorithm);
+
+		Path pitchDataFile = selectedSong.getPitchDataFile();
+		LoadData.writePitchData(pitchData, pitchDataFile);
+		selectedSong.setHasPitchData(true);
 	}
 
 	public boolean analyseBeat()
@@ -140,7 +144,7 @@ public class Model
 			Path beatDataFile = selectedSong.getBeatDataFile();
 			LoadData.writeBeatData(beatData, beatDataFile);
 			//Should probably in boolean return value to LoadData to check for errors
-			selectedSong.setBeatDataFile(beatDataFile);
+			selectedSong.setHasBeatData(true);
 			detectionSuccessful = true;
 		}
 

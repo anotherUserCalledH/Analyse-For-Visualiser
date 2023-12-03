@@ -11,7 +11,7 @@
 		fx:controller="musicanalysis.gui.PreviewController"
 		alignment="CENTER">
 	<Canvas fx:id="canvas1" width="250" height="250"/>
-	<HBox spacing="10" alignment="CENTER_LEFT">
+	<HBox spacing="10" alignment="CENTER">
 		<Button fx:id="playPauseButton" text="Play" onAction="#togglePlayPause"/>
 		<Button text="Rewind"/>
 		<Button text="Skip"/>

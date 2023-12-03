@@ -52,10 +52,19 @@ public class SavedSong
 		return beatDataFile;
 	}
 
-	public void setBeatDataFile(Path beatDataFile)
+	public Path getPitchDataFile()
 	{
-		this.beatDataFile = beatDataFile;
-		hasBeatData = true;
+		return pitchDataFile;
+	}
+
+	public void setHasBeatData(boolean hasBeatData)
+	{
+		this.hasBeatData = hasBeatData;
+	}
+
+	public void setHasPitchData(boolean hasPitchData)
+	{
+		this.hasPitchData = hasPitchData;
 	}
 
 	public void setHasSeparatedAudio(boolean hasSeparatedAudio)
