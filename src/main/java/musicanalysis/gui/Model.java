@@ -153,13 +153,8 @@ public class Model
 
 	public float[] getBeatData()
 	{
-		float[] beatData = null;
-
-		if(selectedSong.checkHasBeatData())
-		{
-			Path beatDataFile = selectedSong.getBeatDataFile();
-			beatData = LoadData.readBeatData(beatDataFile);
-		}
+		Path beatDataFile = selectedSong.getBeatDataFile();
+		float[] beatData = LoadData.readBeatData(beatDataFile);
 
 		return beatData;
 	}

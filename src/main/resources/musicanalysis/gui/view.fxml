@@ -15,6 +15,9 @@
 <?import java.net.URL?>
 <?import javafx.scene.control.ChoiceBox?>
 
+<?import musicanalysis.gui.BeatAnalysisPanel?>
+<?import musicanalysis.gui.PitchAnalysisPanel?>
+
 
 <VBox	xmlns:fx="http://javafx.com/fxml"
 		fx:controller="musicanalysis.gui.Controller"
@@ -22,7 +25,7 @@
 	<stylesheets>
 		<URL value="@style.css" />
 	</stylesheets>
-	<GridPane gridLinesVisible="true" alignment="TOP_CENTER">
+	<GridPane gridLinesVisible="false" alignment="TOP_CENTER">
 		<columnConstraints>
 			<ColumnConstraints percentWidth="33.3" />
 			<ColumnConstraints percentWidth="33.3" />
@@ -30,7 +33,7 @@
 		</columnConstraints>
 		<VBox spacing="10" GridPane.columnIndex="0" alignment="TOP_CENTER" styleClass="padded-container">
 			<Label text="Choose New Song" styleClass="header"/>
-			<Button text="Choose File" onAction="#chooseFile"/>
+			<Button text="Choose .wav File" onAction="#chooseFile"/>
 			<Label fx:id="fileNameLabel" text="Chosen Song: "/>
 			<Button fx:id="confirmButton" text="Confirm" onAction="#confirmFile" disable="true"/>
 		</VBox>
@@ -47,40 +50,8 @@
 			</VBox>
 		</VBox>
 	</GridPane>
-	<GridPane gridLinesVisible="true" style="-fx-background-color: red" alignment="CENTER" VBox.vgrow="ALWAYS">
-		<HBox GridPane.rowIndex="0" GridPane.columnIndex="0" alignment="CENTER_RIGHT" styleClass="padded-container">
-			<Label text="BEAT" styleClass="header"/>
-		</HBox>
-		<HBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="2" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER_LEFT">
-			<Button fx:id="analyseBeatButton" text="Analyse" onAction="#analyseBeat" disable="true"/>
-			<ImageView fx:id="beatStatusIcon"/>
-			<Label fx:id="beatStatusLabel"/>
-			<Button fx:id="previewBeatButton" text="Preview" onAction="#launchBeatPreview" visible="false"/>
-		</HBox>
-		<!-- <HBox GridPane.rowIndex="0" GridPane.columnIndex="3" alignment="CENTER" styleClass="padded-container"> -->
-		<!-- </HBox> -->
-		<HBox GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER_RIGHT">
-			<Label text="PITCH" styleClass="header, padded-container"/>
-		</HBox>
-		<HBox GridPane.rowIndex="1" GridPane.columnIndex="1" alignment="CENTER" styleClass="padded-container">
-			<ChoiceBox fx:id="pitchAlgorithmsChoiceBox"/>
-		</HBox>
-		<HBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="2" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER_LEFT">
-			<Button fx:id="analysePitchButton" text="Analyse" onAction="#analysePitch" disable="true"/>
-			<ImageView fx:id="pitchStatusIcon"/>
-			<Label fx:id="pitchStatusLabel"/>
-			<Button fx:id="previewPitchButton" text="Preview" visible="false"/>
-		</HBox>
-		<HBox GridPane.rowIndex="2" GridPane.columnIndex="0" alignment="CENTER_RIGHT" styleClass="padded-container">
-			<Label text="NOTE ONSETS" styleClass="header"/>
-		</HBox>
-		<HBox spacing="10" GridPane.rowIndex="2" GridPane.columnIndex="2" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" alignment="CENTER_LEFT">
-			<Button fx:id="analyseOnsetButton" text="Analyse" disable="true"/>
-			<ImageView fx:id="onsetStatusIcon"/>
-			<Label fx:id="onsetStatusLabel"/>
-			<Button fx:id="previewOnsetButton" text="Preview" visible="false"/>
-		</HBox>
-	</GridPane>
+	<BeatAnalysisPanel fx:id="beatPanel"/>
+	<PitchAnalysisPanel fx:id="pitchPanel"/>
 <!-- 			<padding>
 				<Insets left="20.0" right="20.0" bottom="20.0" top="20.0"/>
 			</padding> -->
