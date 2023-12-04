@@ -1,6 +1,6 @@
-package musicanalysis.gui;
+package musicanalysis.gui.panels;
 
-import musicanalysis.io.SavedSong;
+import musicanalysis.gui.SavedSong;
 import musicanalysis.AnalyseMusic;
 import musicanalysis.io.LoadData;
 
@@ -67,11 +67,13 @@ public class PitchAnalysisPanel extends AnalysisPanel
 
 			setNotReady();
 		}
+
+		previewButton.setVisible(false);
 	}
 
 	protected void analysePitch(PitchProcessor.PitchEstimationAlgorithm pitchAlgorithm)
 	{
-		Path selectedSongFile = selectedSong.getSongFile();
+		Path selectedSongFile = selectedSong.getVocalsFile();
 		int[] pitchData = AnalyseMusic.detectPitch(selectedSongFile, pitchAlgorithm);
 
 		Path pitchDataFile = selectedSong.getPitchDataFile();

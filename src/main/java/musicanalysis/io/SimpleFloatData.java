@@ -1,22 +1,20 @@
 package musicanalysis.io;
 
-import musicanalysis.Util;
-
 import java.util.ArrayList;
 
-public class BeatData extends IOData
+public class SimpleFloatData extends IOData
 {
-	private float[] beatDataArray; //Beat data in time stamps
+	private float[] floatDataArray;
 	private ArrayList<Float> tempInputData;
 
-	public BeatData(float[] beatDataArray)
+	public SimpleFloatData(float[] floatDataArray)
 	{
 		this.hasData = true;
-		this.beatDataArray = beatDataArray;
+		this.floatDataArray = floatDataArray;
 		this.tempInputData = new ArrayList<Float>();
 	}
 
-	public BeatData()
+	public SimpleFloatData()
 	{
 		this.hasData = false;
 		this.tempInputData = new ArrayList<Float>();
@@ -29,7 +27,7 @@ public class BeatData extends IOData
 
 		if(hasData = true)
 		{
-			noLines = beatDataArray.length;
+			noLines = floatDataArray.length;
 		}
 		else
 		{
@@ -42,7 +40,7 @@ public class BeatData extends IOData
 	@Override
 	public String buildLine(int lineNumber)
 	{
-		String builtOutput = beatDataArray[lineNumber] + ",";
+		String builtOutput = floatDataArray[lineNumber] + ",";
 
 		return builtOutput;
 	}
@@ -57,8 +55,8 @@ public class BeatData extends IOData
 
 	public float[] getData()
 	{
-		beatDataArray = convertToFloatArray(tempInputData);
+		floatDataArray = convertToFloatArray(tempInputData);
 		hasData = true;
-		return beatDataArray;
+		return floatDataArray;
 	}
 }

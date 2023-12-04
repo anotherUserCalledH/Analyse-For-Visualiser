@@ -7,7 +7,7 @@
 <?import javafx.scene.image.ImageView?>
 
 
-<fx:root type="javafx.scene.layout.HBox" xmlns:fx="http://javafx.com/fxml">
+<fx:root type="javafx.scene.layout.HBox" xmlns:fx="http://javafx.com/fxml" styleClass="panel">
 	<HBox fx:id="column0" alignment="CENTER_RIGHT" styleClass="padded-container">
 			<Label text="HEADER" fx:id="headerLabel" styleClass="header"/>
 	</HBox>

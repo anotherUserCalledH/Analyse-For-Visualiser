@@ -1,6 +1,6 @@
-package musicanalysis.gui;
+package musicanalysis.gui.panels;
 
-import musicanalysis.io.SavedSong;
+import musicanalysis.gui.SavedSong;
 
 import javafx.event.ActionEvent;
 import javafx.scene.layout.HBox;
@@ -26,10 +26,10 @@ public abstract class AnalysisPanel extends HBox
 	{
 		try
 		{
-			defaultIcon = new Image(GUI.class.getResource("background_icon.png").toString());
-			tickIcon = new Image(GUI.class.getResource("tick_icon.png").toString());
-			crossIcon = new Image(GUI.class.getResource("cross_icon.png").toString());
-			noticeIcon = new Image(GUI.class.getResource("notice_icon.png").toString());
+			defaultIcon = new Image(AnalysisPanel.class.getResource("background_icon.png").toString());
+			tickIcon = new Image(AnalysisPanel.class.getResource("tick_icon.png").toString());
+			crossIcon = new Image(AnalysisPanel.class.getResource("cross_icon.png").toString());
+			noticeIcon = new Image(AnalysisPanel.class.getResource("notice_icon.png").toString());
 		}
 		catch(Exception e)
 		{
@@ -76,15 +76,9 @@ public abstract class AnalysisPanel extends HBox
 		this.bindingProperty = new ReadOnlyDoubleProperty[] { column0.widthProperty(), column1.widthProperty() };
 	}
 
-	public void bindPanel(ReadOnlyDoubleProperty[] partnerBindingProperty)
+	protected void setHeaderLabel(String panelName)
 	{
-		column0.minWidthProperty().bind(partnerBindingProperty[0]);
-		column1.minWidthProperty().bind(partnerBindingProperty[1]);
-	}
-
-	public ReadOnlyDoubleProperty[] getBindingProperty()
-	{
-		return bindingProperty;
+		headerLabel.setText(panelName);
 	}
 
 	public void setSelectedSong(SavedSong selectedSong)
@@ -93,17 +87,29 @@ public abstract class AnalysisPanel extends HBox
 		updateAnalysisStatus();
 	}
 
-	@FXML
-	protected abstract void analyse(ActionEvent event);
-
-	@FXML
-	protected abstract void preview(ActionEvent event);
+	protected abstract void initialiseChoiceBox();
 
 	public abstract void updateAnalysisStatus();
 
-	protected void setHeaderLabel(String panelName)
+	public ReadOnlyDoubleProperty[] getBindingProperty()
 	{
-		headerLabel.setText(panelName);
+		return bindingProperty;
+	}
+
+	public void bindPanel(ReadOnlyDoubleProperty[] partnerBindingProperty)
+	{
+		column0.minWidthProperty().bind(partnerBindingProperty[0]);
+		column1.minWidthProperty().bind(partnerBindingProperty[1]);
+	}
+
+	protected void initialiseStatus()
+	{
+		statusIcon.setImage(defaultIcon);
+		statusIcon.setFitWidth(25);
+		statusIcon.setPreserveRatio(true);
+		statusIcon.setCache(true);
+		analyseButton.setDisable(true);
+		previewButton.setVisible(false);
 	}
 
 	protected void setNotReady()
@@ -138,15 +144,9 @@ public abstract class AnalysisPanel extends HBox
 		previewButton.setVisible(true);
 	}
 
-	protected void initialiseStatus()
-	{
-		statusIcon.setImage(defaultIcon);
-		statusIcon.setFitWidth(25);
-		statusIcon.setPreserveRatio(true);
-		statusIcon.setCache(true);
-		analyseButton.setDisable(true);
-		previewButton.setVisible(false);
-	}
+	@FXML
+	protected abstract void analyse(ActionEvent event);
 
-	protected abstract void initialiseChoiceBox();
+	@FXML
+	protected abstract void preview(ActionEvent event);
 }

@@ -40,12 +40,21 @@ public class LoadData
 	// 	writeData(outputObject, path);
 	// }
 
-	public static void writeBeatData(float[] outputArray, Path path)
+	public static void writeSimpleFloatData(float[] outputArray, Path path)
 	{
-		IOData outputObject = new BeatData(outputArray);
+		IOData outputObject = new SimpleFloatData(outputArray);
 		writeData(outputObject, path);
 	}
 
+	public static void writeBeatData(float[] outputArray, Path path)
+	{
+		writeSimpleFloatData(outputArray, path);
+	}
+
+	public static void writeOnsetData(float[] outputArray, Path path)
+	{
+		writeSimpleFloatData(outputArray, path);
+	}
 
 	private static IOData readData(IOData inputObject, Path path)
 	{
@@ -77,11 +86,21 @@ public class LoadData
 		return inputArray;
 	}
 
+	public static float[] readSimpleFloatData(Path path)
+	{
+		IOData inputObject = new SimpleFloatData();
+		SimpleFloatData dataObject = (SimpleFloatData) readData(inputObject, path);
+		float[] inputArray = dataObject.getData();
+		return inputArray;
+	}
+
 	public static float[] readBeatData(Path path)
 	{
-		IOData inputObject = new BeatData();
-		BeatData beatDataObject = (BeatData) readData(inputObject, path);
-		float[] inputArray = beatDataObject.getData();
-		return inputArray;
+		return readSimpleFloatData(path);
+	}
+
+	public static float[] readOnsetData(Path path)
+	{
+		return readSimpleFloatData(path);
 	}
 }

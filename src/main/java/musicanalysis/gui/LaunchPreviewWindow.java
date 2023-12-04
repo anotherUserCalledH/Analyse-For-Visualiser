@@ -2,8 +2,8 @@ package musicanalysis.gui;
 
 import musicanalysis.preview.PreviewVisualiser;
 import musicanalysis.preview.VisualiserEffect;
-// import musicanalysis.preview.PreviewType;
 import musicanalysis.preview.BeatMarker;
+import musicanalysis.preview.TimestampMarker;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.Scene;
@@ -26,7 +26,7 @@ public class LaunchPreviewWindow
 
 	public static VisualiserEffect launch(Path songPath, PreviewType previewType1) throws Exception
 	{
-		FXMLLoader fxmlLoader1 = new FXMLLoader(GUI.class.getResource("previewWindow.fxml"));
+		FXMLLoader fxmlLoader1 = new FXMLLoader(GUI.class.getResource("preview_window.fxml"));
 		Pane root = fxmlLoader1.load();
 		PreviewController previewController1 = fxmlLoader1.getController();
 		ObservableList<Node> list = root.getChildren();
@@ -42,6 +42,10 @@ public class LaunchPreviewWindow
 		{
 			case BEAT:
 				effect = new BeatMarker(context, canvasWidth, canvasHeight);
+				break;
+
+			case ONSET:
+				effect = new TimestampMarker(context, canvasWidth, canvasHeight);
 				break;
 		}
 
@@ -63,5 +67,11 @@ public class LaunchPreviewWindow
 	{
 		BeatMarker effect = (BeatMarker) launch(songPath, PreviewType.BEAT);
 		effect.setData(beatArray);
+	}
+
+	public static void launchOnsetPreview(Path songPath, float[] onsetArray) throws Exception
+	{
+		TimestampMarker effect = (TimestampMarker) launch(songPath, PreviewType.ONSET);
+		effect.setData(onsetArray);
 	}
 }

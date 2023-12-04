@@ -2,7 +2,6 @@ package musicanalysis;
 
 import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
-
 import be.tarsos.dsp.onsets.ComplexOnsetDetector;
 import be.tarsos.dsp.pitch.PitchProcessor;
 
@@ -59,6 +58,27 @@ public class AnalyseMusic
 
 		return pitches;
 	}
+
+	public static float[] detectOnsets(Path audioFile)
+	{
+		int size = 512;
+		int overlap = 256;
+		int sampleRate = 44100;
+
+		String stringPath = audioFile.toAbsolutePath().toString();
+
+		AudioDispatcher dispatcher = AudioDispatcherFactory.fromPipe(stringPath, sampleRate, size, overlap);
+
+		OnsetRetriever handler = new OnsetRetriever();
+		ComplexOnsetDetector detector = new ComplexOnsetDetector(size, 0.7, 0.1);
+		detector.setHandler(handler);
+		dispatcher.addAudioProcessor(detector);
+		dispatcher.run();
+
+		float[] onsets = handler.getOnsetArray();
+
+		return onsets;
+}
 
 	public static ArrayList<PitchProcessor.PitchEstimationAlgorithm> getPitchAlgorithms()
 	{

@@ -1,30 +1,24 @@
 package musicanalysis.gui;
 
-import musicanalysis.io.SavedSong;
-
 import be.tarsos.dsp.pitch.PitchProcessor;
+import musicanalysis.gui.panels.BeatAnalysisPanel;
+import musicanalysis.gui.panels.PitchAnalysisPanel;
+import musicanalysis.gui.panels.OnsetAnalysisPanel;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.Image;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ChoiceBox;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 
-import java.nio.file.Path;
 import java.io.File;
-import java.util.ArrayList;
 
 public class Controller
 {
@@ -53,6 +47,9 @@ public class Controller
 	@FXML
 	private PitchAnalysisPanel pitchPanel;
 
+	@FXML
+	private OnsetAnalysisPanel onsetPanel;
+
 	private File chosenFile;
 
 	private Label separationProgressLabel;
@@ -62,8 +59,9 @@ public class Controller
 
 	public void initialize()
 	{
-		beatPanel.bindPanel(pitchPanel.getBindingProperty());
+		beatPanel.bindPanel(onsetPanel.getBindingProperty());
 		pitchPanel.bindPanel(beatPanel.getBindingProperty());
+		onsetPanel.bindPanel(pitchPanel.getBindingProperty());
 
 		separationProgressLabel = new Label("Source Separation Successful! :)");
 		separationProgressBar.setProgress(0);
@@ -81,6 +79,7 @@ public class Controller
 					model1.setSelectedSong(selectedSong);
 					beatPanel.setSelectedSong(selectedSong);
 					pitchPanel.setSelectedSong(selectedSong);
+					onsetPanel.setSelectedSong(selectedSong);
 				}
 			}
 		});

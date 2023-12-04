@@ -15,8 +15,9 @@
 <?import java.net.URL?>
 <?import javafx.scene.control.ChoiceBox?>
 
-<?import musicanalysis.gui.BeatAnalysisPanel?>
-<?import musicanalysis.gui.PitchAnalysisPanel?>
+<?import musicanalysis.gui.panels.BeatAnalysisPanel?>
+<?import musicanalysis.gui.panels.PitchAnalysisPanel?>
+<?import musicanalysis.gui.panels.OnsetAnalysisPanel?>
 
 
 <VBox	xmlns:fx="http://javafx.com/fxml"
@@ -32,7 +33,7 @@
 			<ColumnConstraints percentWidth="33.3" />
 		</columnConstraints>
 		<VBox spacing="10" GridPane.columnIndex="0" alignment="TOP_CENTER" styleClass="padded-container">
-			<Label text="Choose New Song" styleClass="header"/>
+			<Label text="New Song" styleClass="header"/>
 			<Button text="Choose .wav File" onAction="#chooseFile"/>
 			<Label fx:id="fileNameLabel" text="Chosen Song: "/>
 			<Button fx:id="confirmButton" text="Confirm" onAction="#confirmFile" disable="true"/>
@@ -52,6 +53,7 @@
 	</GridPane>
 	<BeatAnalysisPanel fx:id="beatPanel"/>
 	<PitchAnalysisPanel fx:id="pitchPanel"/>
+	<OnsetAnalysisPanel fx:id="onsetPanel"/>
 <!-- 			<padding>
 				<Insets left="20.0" right="20.0" bottom="20.0" top="20.0"/>
 			</padding> -->

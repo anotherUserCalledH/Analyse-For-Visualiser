@@ -1,7 +1,5 @@
 package musicanalysis.io;
 
-import musicanalysis.Util;
-
 import java.util.ArrayList;
 
 public class PitchData extends IOData

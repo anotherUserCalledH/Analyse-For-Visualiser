@@ -1,4 +1,4 @@
-package musicanalysis.io;
+package musicanalysis.gui;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,13 +12,15 @@ public class SavedSong
 	private Path separatedAudioDirectory;
 	private Path beatDataFile;
 	private Path pitchDataFile;
+	private Path onsetDataFile;
 
 	private boolean hasBeatData;
 	private boolean hasPitchData;
+	private boolean hasOnsetData;
 	private boolean hasSeparatedAudio;
 
 
-	public SavedSong(String songName, Path storageDirectory, Path songFile) //will be less error prone if I pass in demucs output folder as argument
+	public SavedSong(String songName, Path storageDirectory, Path songFile)
 	{
 		this.songName = songName;
 		this.storageDirectory = storageDirectory;
@@ -35,6 +37,10 @@ public class SavedSong
 		this.pitchDataFile = storageDirectory.resolve("pitchData.csv");
 		if(Files.exists(pitchDataFile)){this.hasPitchData = true;}
 		else {this.hasPitchData = false;}
+
+		this.onsetDataFile = storageDirectory.resolve("onsetData.csv");
+		if(Files.exists(onsetDataFile)){this.hasOnsetData = true;}
+		else {this.hasOnsetData = false;}
 	}
 
 	public Path getSongFile()
@@ -57,6 +63,16 @@ public class SavedSong
 		return pitchDataFile;
 	}
 
+	public Path getOnsetDataFile()
+	{
+		return onsetDataFile;
+	}
+
+	public Path getVocalsFile()
+	{
+		return separatedAudioDirectory.resolve("vocals.wav");
+	}
+
 	public void setHasBeatData(boolean hasBeatData)
 	{
 		this.hasBeatData = hasBeatData;
@@ -65,6 +81,11 @@ public class SavedSong
 	public void setHasPitchData(boolean hasPitchData)
 	{
 		this.hasPitchData = hasPitchData;
+	}
+
+	public void setHasOnsetData(boolean hasPitchData)
+	{
+		this.hasOnsetData = hasOnsetData;
 	}
 
 	public void setHasSeparatedAudio(boolean hasSeparatedAudio)
@@ -80,6 +101,11 @@ public class SavedSong
 	public boolean checkHasPitchData()
 	{
 		return hasPitchData;
+	}
+
+	public boolean checkHasOnsetData()
+	{
+		return hasOnsetData;
 	}
 
 	public boolean checkHasSeparatedAudio()
