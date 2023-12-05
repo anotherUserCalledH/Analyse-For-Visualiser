@@ -17,8 +17,13 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.ProgressBar;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.application.Platform;
 
 import java.io.File;
+import java.lang.Process;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
+import javafx.concurrent.Task;
 
 public class Controller
 {
@@ -115,6 +120,7 @@ public class Controller
 			SavedSong chosenSong = model1.getSelectedSong();
 			beatPanel.setSelectedSong(chosenSong);
 			pitchPanel.setSelectedSong(chosenSong);
+			onsetPanel.setSelectedSong(chosenSong);
 		}
 		else
 		{
@@ -125,12 +131,25 @@ public class Controller
 	@FXML
 	private void beginSourceSeparation(ActionEvent event)
 	{
-		boolean detectionSuccessful = model1.runSourceSeparation();
-		if(detectionSuccessful)
+		final SavedSong SONG_FOR_SEPARATION = model1.getSelectedSong();
+		Process demucs = model1.runSourceSeparation();
+
+		if(demucs != null)
 		{
-			beatPanel.updateAnalysisStatus();
-			pitchPanel.updateAnalysisStatus();
+			ProgressUpdater task = new ProgressUpdater(demucs);
+			separationProgressBar.progressProperty().bind(task.progressProperty());
+			task.setOnSucceeded(new EventHandler<WorkerStateEvent>()
+			{
+				@Override
+				public void handle(WorkerStateEvent succeeded)
+				{
+					model1.checkSourceSeparation(SONG_FOR_SEPARATION);
+					pitchPanel.updateAnalysisStatus();
+					onsetPanel.updateAnalysisStatus();
+				}
+			});
+
+			new Thread(task).start();
 		}
 	}
 }
-

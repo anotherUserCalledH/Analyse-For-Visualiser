@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 public class SeparateTracks
 {
-	public static boolean separateAudioFile(Path demucsPath, Path inputPath, Path outputPath)
+	public static Process separateAudioFile(Path demucsPath, Path inputPath, Path outputPath)
 	{
 		String demucsPathString = demucsPath.toAbsolutePath().toString();
 		String inputPathString = inputPath.toAbsolutePath().toString();
@@ -20,38 +20,19 @@ public class SeparateTracks
 		String outputCommand = "-o" + outputPathString;
 
 		ProcessBuilder demucsPB = new ProcessBuilder();
-		demucsPB.redirectErrorStream(true);
-		// demucsPB.command(demucsPath + "\\RunDemucs.exe", inputFilePath, outputCommand);
 		demucsPB.command(demucsPathString, inputPathString, outputCommand);
-		String programOutput = "";
+
+		Process demucs = null;		
 
 		try
 		{
-			Process demucs = demucsPB.start();
-			InputStream input = demucs.getInputStream();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-			while(!(programOutput.equals("proceed")))
-			{
-				programOutput = reader.readLine();
-
-				if(demucs.isAlive() != true)
-				{
-					break;
-				}
-			}
-			input.close();
+			demucs = demucsPB.start();
 		}		
 		catch(IOException e)
 		{
 			e.printStackTrace();
 		}
 
-		String inputFileName = (inputPath.getFileName()).toString();
-		String[] splitFileName = inputFileName.split("\\.");
-		String outputFolder = splitFileName[0];
-		Path testPath = Paths.get(outputPathString + "\\htdemucs\\" + outputFolder + "\\vocals.wav");
-		boolean outputExists = Files.exists(testPath); 
-
-		return outputExists;
+		return demucs;
 	}
 }

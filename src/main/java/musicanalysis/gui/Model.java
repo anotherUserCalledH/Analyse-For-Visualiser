@@ -14,6 +14,8 @@ import java.io.File;
 import java.util.List;
 import java.net.URL;
 
+import java.lang.Process;
+
 
 public class Model
 {
@@ -91,28 +93,31 @@ public class Model
 		return saveSuccessful;
 	}
 
-	public boolean runSourceSeparation()
+	public Process runSourceSeparation()
 	{
 		Path selectedSongFile = selectedSong.getSongFile();
-		boolean separationSuccessful = false;
+		Process demucs = null;
 
 		if(demucsPath != null)
 		{
-			separationSuccessful = SeparateTracks.separateAudioFile(demucsPath, selectedSongFile, dataDirectory);
-			if(!separationSuccessful)
-			{
-				System.err.println("Error in source separation");
-			}
-			else
-			{
-				selectedSong.setHasSeparatedAudio(true);
-			}
+			demucs = SeparateTracks.separateAudioFile(demucsPath, selectedSongFile, dataDirectory);
 		}
 		else
 		{
 			System.err.println("Demucs source separation model not found.");
 		}
 
-		return separationSuccessful;
+		return demucs;
+	}
+
+	public static void checkSourceSeparation(SavedSong songForSeparation)
+	{
+		Path vocalsFile = songForSeparation.getVocalsFile();
+		boolean separationSuccessful = false;
+		if(Files.exists(vocalsFile))
+		{
+			separationSuccessful = true;
+			songForSeparation.setHasSeparatedAudio(true);
+		}
 	}
 }
