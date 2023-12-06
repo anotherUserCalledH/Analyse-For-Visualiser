@@ -3,6 +3,7 @@ package musicanalysis.gui;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.InputStream;
+import java.io.IOException;
 import java.lang.Process;
 
 import javafx.concurrent.Task;
@@ -35,8 +36,6 @@ public class ProgressUpdater extends Task
 			}
 		}
 
-		System.out.println(outputString.toString());
-
 		double percentProgress = 10;
 		if(outputString.length() > 0)
 		{
@@ -66,7 +65,7 @@ public class ProgressUpdater extends Task
 			{
 				errorOutput = errorReader.readLine();
 			}
-			catch(Exception e)
+			catch(IOException e)
 			{
 				e.printStackTrace();
 			}
@@ -81,7 +80,7 @@ public class ProgressUpdater extends Task
 		{
 			errorReader.close();
 		}
-		catch(Exception e)
+		catch(IOException e)
 		{
 			e.printStackTrace();
 		}

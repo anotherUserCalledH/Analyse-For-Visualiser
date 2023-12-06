@@ -11,8 +11,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.net.URL;
+import java.net.URISyntaxException;
 
 import java.lang.Process;
 
@@ -37,7 +39,7 @@ public class Model
 			this.demucsPath = Paths.get(demucsPathURL.toURI());
 			if(!Files.exists(demucsPath)){ this.demucsPath = null; }
 		}
-		catch(Exception e)
+		catch(URISyntaxException e)
 		{
 			e.printStackTrace();
 		}
