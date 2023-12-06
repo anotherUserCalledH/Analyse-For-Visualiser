@@ -4,11 +4,10 @@ package musicanalysis;
 
 import java.lang.ProcessBuilder;
 import java.lang.Process;
-import java.io.*;
-import java.nio.file.Files;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 
 public class SeparateTracks
 {
@@ -28,7 +27,7 @@ public class SeparateTracks
 		{
 			demucs = demucsPB.start();
 		}		
-		catch(IOException e)
+		catch(Exception e)
 		{
 			e.printStackTrace();
 		}

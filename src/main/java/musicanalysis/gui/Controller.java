@@ -78,13 +78,11 @@ public class Controller
 			@Override
 			public void changed(ObservableValue<? extends SavedSong> observable, SavedSong oldValue, SavedSong newValue)
 			{
-			if (newValue != null)
+				if(newValue != null)
 				{
 					SavedSong selectedSong = savedSongsListView.getSelectionModel().getSelectedItem();
 					model1.setSelectedSong(selectedSong);
-					beatPanel.setSelectedSong(selectedSong);
-					pitchPanel.setSelectedSong(selectedSong);
-					onsetPanel.setSelectedSong(selectedSong);
+					updatePanelSong(selectedSong);
 				}
 			}
 		});
@@ -93,6 +91,20 @@ public class Controller
 	private void setFileNameLabel(String labelString)
 	{
 		fileNameLabel.setText("Chosen Song: " + labelString);
+	}
+
+	private void updatePanelSong(SavedSong selectedSong)
+	{
+		beatPanel.setSelectedSong(selectedSong);
+		pitchPanel.setSelectedSong(selectedSong);
+		onsetPanel.setSelectedSong(selectedSong);
+	}
+
+	private void updatePanelStatus()
+	{
+		beatPanel.updateAnalysisStatus();
+		pitchPanel.updateAnalysisStatus();
+		onsetPanel.updateAnalysisStatus();
 	}
 
 	@FXML
@@ -118,9 +130,7 @@ public class Controller
 		if(saveSuccessful)
 		{
 			SavedSong chosenSong = model1.getSelectedSong();
-			beatPanel.setSelectedSong(chosenSong);
-			pitchPanel.setSelectedSong(chosenSong);
-			onsetPanel.setSelectedSong(chosenSong);
+			updatePanelSong(chosenSong);
 		}
 		else
 		{
@@ -144,8 +154,7 @@ public class Controller
 				public void handle(WorkerStateEvent succeeded)
 				{
 					model1.checkSourceSeparation(SONG_FOR_SEPARATION);
-					pitchPanel.updateAnalysisStatus();
-					onsetPanel.updateAnalysisStatus();
+					updatePanelStatus();
 				}
 			});
 
