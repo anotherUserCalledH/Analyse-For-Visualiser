@@ -1,7 +1,7 @@
 package musicanalysis.gui.panels;
 
 import musicanalysis.gui.SavedSong;
-import musicanalysis.gui.LaunchPreviewWindow;
+import musicanalysis.gui.LaunchNewWindow;
 import musicanalysis.AnalyseMusic;
 import musicanalysis.io.LoadData;
 
@@ -75,7 +75,7 @@ public class BeatAnalysisPanel extends AnalysisPanel
 
 		try
 		{
-			LaunchPreviewWindow.launchBeatPreview(songPath, beatData);
+			LaunchNewWindow.launchBeatPreview(songPath, beatData);
 		}
 		catch(Exception e)
 		{

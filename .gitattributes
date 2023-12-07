@@ -1,1 +1,1 @@
-src/main/resources/musicanalysis/RunDemucs/RunDemucs.exe filter=lfs diff=lfs merge=lfs -text
+bin/demucs/RunDemucs.exe filter=lfs diff=lfs merge=lfs -text

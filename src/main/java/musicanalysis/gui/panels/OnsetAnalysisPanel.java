@@ -3,7 +3,7 @@ package musicanalysis.gui.panels;
 import musicanalysis.gui.SavedSong;
 import musicanalysis.AnalyseMusic;
 import musicanalysis.io.LoadData;
-import musicanalysis.gui.LaunchPreviewWindow;
+import musicanalysis.gui.LaunchNewWindow;
 
 import javafx.event.ActionEvent;
 import java.nio.file.Path;
@@ -75,7 +75,7 @@ public class OnsetAnalysisPanel extends AnalysisPanel
 
 		try
 		{
-			LaunchPreviewWindow.launchOnsetPreview(songPath, onsetData);
+			LaunchNewWindow.launchOnsetPreview(songPath, onsetData);
 		}
 		catch(Exception e)
 		{

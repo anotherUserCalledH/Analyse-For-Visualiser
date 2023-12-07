@@ -16,6 +16,9 @@ import java.util.List;
 import java.net.URL;
 import java.net.URISyntaxException;
 
+import java.io.InputStream;
+import java.nio.file.StandardCopyOption;
+
 import java.lang.Process;
 
 
@@ -32,17 +35,8 @@ public class Model
 		savedSongs = FXCollections.observableArrayList();
 		Path currentDirectory = Paths.get(System.getProperty("user.dir"));
 		this.dataDirectory = LoadFile.getDirectory(currentDirectory,"data");
-
-		try
-		{
-			URL demucsPathURL = SeparateTracks.class.getResource("RunDemucs/RunDemucs.exe");
-			this.demucsPath = Paths.get(demucsPathURL.toURI());
-			if(!Files.exists(demucsPath)){ this.demucsPath = null; }
-		}
-		catch(URISyntaxException e)
-		{
-			e.printStackTrace();
-		}
+		this.demucsPath = currentDirectory.resolve("bin/demucs/RunDemucs.exe");
+		if(!Files.exists(demucsPath)){ this.demucsPath = null; }
 	}
 
 	public SavedSong getSelectedSong()
