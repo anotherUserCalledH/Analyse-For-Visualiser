@@ -5,8 +5,7 @@ import be.tarsos.dsp.io.jvm.AudioDispatcherFactory;
 import be.tarsos.dsp.onsets.ComplexOnsetDetector;
 import be.tarsos.dsp.pitch.PitchProcessor;
 
-import java.util.Arrays;
-import java.util.ArrayList;
+
 import java.nio.file.Path;
 
 
@@ -78,20 +77,7 @@ public class AnalyseMusic
 		float[] onsets = handler.getOnsetArray();
 
 		return onsets;
-}
-
-	public static ArrayList<PitchProcessor.PitchEstimationAlgorithm> getPitchAlgorithms()
-	{
-		ArrayList<PitchProcessor.PitchEstimationAlgorithm> pitchAlgorithms = new ArrayList<PitchProcessor.PitchEstimationAlgorithm>();
-		for(PitchProcessor.PitchEstimationAlgorithm pitchAlgorithm : PitchProcessor.PitchEstimationAlgorithm.values())
-		{
-			pitchAlgorithms.add(pitchAlgorithm);
-		}
-
-		return pitchAlgorithms;
 	}
-
-
 }
 
  //FXCollections.observableArrayList("YIN", "McLeod Pitch Method", "Yin FFT", "Dynamic Wavelet", "Spectrum Energy", "AMDF Function", "Chunky Yin");

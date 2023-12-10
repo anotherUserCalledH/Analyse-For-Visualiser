@@ -1,13 +1,10 @@
 package musicanalysis.gui.panels;
 
 import musicanalysis.gui.SavedSong;
-import musicanalysis.AnalyseMusic;
+import musicanalysis.PitchDetectionAlgorithm;
 import musicanalysis.io.LoadData;
 
-import be.tarsos.dsp.pitch.PitchProcessor;
-
 //Should be moved to AnalysisPanel at some point
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,29 +13,41 @@ import javafx.event.ActionEvent;
 import java.nio.file.Path;
 
 
-public class PitchAnalysisPanel extends AnalysisPanel
+public class PitchAnalysisPanel extends AnalysisPanel<PitchDetectionAlgorithm>
 {
-	private PitchProcessor.PitchEstimationAlgorithm chosenPitchAlgorithm;
+	private PitchDetectionAlgorithm chosenPitchAlgorithm;
 
 	public PitchAnalysisPanel() throws Exception
 	{
 		setHeaderLabel("PITCH");
 	}
 
+	public void initialize()
+	{
+		model = new PitchAnalysisModel();
+		super.initialize();
+	}
+
+	@Override
+	public void setPluginDirectory(Path pluginDirectory)
+	{
+		model.loadPlugins(pluginDirectory);
+	}
+
 	@Override
 	protected void initialiseChoiceBox()
 	{
-		ObservableList<PitchProcessor.PitchEstimationAlgorithm> algorithms = FXCollections.observableArrayList(AnalyseMusic.getPitchAlgorithms());
+		ObservableList<PitchDetectionAlgorithm> algorithms = model.getAlgorithms();
 		
 		algorithmsChoiceBox.setItems(algorithms);
-		algorithmsChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PitchProcessor.PitchEstimationAlgorithm>()
+		algorithmsChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PitchDetectionAlgorithm>()
 		{
 			@Override
-			public void changed(ObservableValue<? extends PitchProcessor.PitchEstimationAlgorithm> observable, PitchProcessor.PitchEstimationAlgorithm oldValue, PitchProcessor.PitchEstimationAlgorithm newValue)
+			public void changed(ObservableValue<? extends PitchDetectionAlgorithm> observable, PitchDetectionAlgorithm oldValue, PitchDetectionAlgorithm newValue)
 			{
 			if (newValue != null)
 				{
-					chosenPitchAlgorithm = (PitchProcessor.PitchEstimationAlgorithm) algorithmsChoiceBox.getSelectionModel().getSelectedItem();
+					chosenPitchAlgorithm = (PitchDetectionAlgorithm) algorithmsChoiceBox.getSelectionModel().getSelectedItem();
 					if(selectedSong.checkHasSeparatedAudio())
 					{
 						setReady();
@@ -71,10 +80,10 @@ public class PitchAnalysisPanel extends AnalysisPanel
 		previewButton.setVisible(false);
 	}
 
-	protected void analysePitch(PitchProcessor.PitchEstimationAlgorithm pitchAlgorithm)
+	protected void analysePitch(PitchDetectionAlgorithm pitchAlgorithm, SavedSong selectedSong)
 	{
 		Path selectedSongFile = selectedSong.getVocalsFile();
-		int[] pitchData = AnalyseMusic.detectPitch(selectedSongFile, pitchAlgorithm);
+		int[] pitchData = pitchAlgorithm.getPitchArray(selectedSongFile);
 
 		Path pitchDataFile = selectedSong.getPitchDataFile();
 		LoadData.writePitchData(pitchData, pitchDataFile);
@@ -84,7 +93,7 @@ public class PitchAnalysisPanel extends AnalysisPanel
 	@Override
 	protected void analyse(ActionEvent event)
 	{
-		analysePitch(chosenPitchAlgorithm);
+		analysePitch(chosenPitchAlgorithm, selectedSong);
 		setComplete();
 	}
 

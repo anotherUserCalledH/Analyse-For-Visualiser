@@ -64,9 +64,7 @@ public class Controller
 
 	public void initialize()
 	{
-		beatPanel.bindPanel(onsetPanel.getBindingProperty());
-		pitchPanel.bindPanel(beatPanel.getBindingProperty());
-		onsetPanel.bindPanel(pitchPanel.getBindingProperty());
+		initialisePanels();
 
 		separationProgressLabel = new Label("Source Separation Successful! :)");
 		separationProgressBar.setProgress(0);
@@ -105,6 +103,17 @@ public class Controller
 		beatPanel.updateAnalysisStatus();
 		pitchPanel.updateAnalysisStatus();
 		onsetPanel.updateAnalysisStatus();
+	}
+
+	private void initialisePanels()
+	{
+		beatPanel.bindPanel(onsetPanel.getBindingProperty());
+		pitchPanel.bindPanel(beatPanel.getBindingProperty());
+		onsetPanel.bindPanel(pitchPanel.getBindingProperty());
+
+		beatPanel.setPluginDirectory(model1.getPluginDirectory());
+		pitchPanel.setPluginDirectory(model1.getPluginDirectory());
+		onsetPanel.setPluginDirectory(model1.getPluginDirectory());
 	}
 
 	@FXML

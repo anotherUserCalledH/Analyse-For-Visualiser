@@ -8,7 +8,7 @@ import java.lang.Process;
 
 import javafx.concurrent.Task;
 
-public class ProgressUpdater extends Task
+public class ProgressUpdater extends Task<Void>
 {
 	Process monitoredProcess;
 

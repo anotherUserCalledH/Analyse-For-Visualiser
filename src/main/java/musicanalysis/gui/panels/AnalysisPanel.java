@@ -15,7 +15,9 @@ import javafx.scene.image.Image;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 
-public abstract class AnalysisPanel extends HBox
+import java.nio.file.Path;
+
+public abstract class AnalysisPanel<T> extends HBox
 {
 	private static Image defaultIcon;
 	private static Image tickIcon;
@@ -41,7 +43,7 @@ public abstract class AnalysisPanel extends HBox
 	protected Label headerLabel;
 
 	@FXML
-	protected ChoiceBox algorithmsChoiceBox;
+	protected ChoiceBox<T> algorithmsChoiceBox;
 
 	@FXML
 	protected Button analyseButton;
@@ -63,6 +65,7 @@ public abstract class AnalysisPanel extends HBox
 
 	protected SavedSong selectedSong;
 	protected ReadOnlyDoubleProperty[] bindingProperty;
+	protected AnalysisModel<T> model;
 
 	public AnalysisPanel() throws Exception
 	{
@@ -70,7 +73,10 @@ public abstract class AnalysisPanel extends HBox
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
 		fxmlLoader.load();
+	}
 
+	public void initialize()
+	{
 		initialiseChoiceBox();
 		initialiseStatus();
 		this.bindingProperty = new ReadOnlyDoubleProperty[] { column0.widthProperty(), column1.widthProperty() };
@@ -81,6 +87,11 @@ public abstract class AnalysisPanel extends HBox
 		headerLabel.setText(panelName);
 	}
 
+	public void setPluginDirectory(Path pluginDirectory)
+	{
+		
+	}
+
 	public void setSelectedSong(SavedSong selectedSong)
 	{
 		this.selectedSong = selectedSong;
@@ -88,6 +99,16 @@ public abstract class AnalysisPanel extends HBox
 	}
 
 	protected abstract void initialiseChoiceBox();
+
+	protected void initialiseStatus()
+	{
+		statusIcon.setImage(defaultIcon);
+		statusIcon.setFitWidth(25);
+		statusIcon.setPreserveRatio(true);
+		statusIcon.setCache(true);
+		analyseButton.setDisable(true);
+		previewButton.setVisible(false);
+	}
 
 	public abstract void updateAnalysisStatus();
 
@@ -102,15 +123,6 @@ public abstract class AnalysisPanel extends HBox
 		column1.minWidthProperty().bind(partnerBindingProperty[1]);
 	}
 
-	protected void initialiseStatus()
-	{
-		statusIcon.setImage(defaultIcon);
-		statusIcon.setFitWidth(25);
-		statusIcon.setPreserveRatio(true);
-		statusIcon.setCache(true);
-		analyseButton.setDisable(true);
-		previewButton.setVisible(false);
-	}
 
 	protected void setNotReady()
 	{

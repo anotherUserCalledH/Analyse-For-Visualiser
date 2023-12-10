@@ -3,7 +3,6 @@ package musicanalysis.gui;
 import musicanalysis.io.LoadFile;
 import musicanalysis.SeparateTracks;
 
-import java.util.ArrayList;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 
@@ -11,13 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.net.URL;
-import java.net.URISyntaxException;
-
-import java.io.InputStream;
-import java.nio.file.StandardCopyOption;
 
 import java.lang.Process;
 
@@ -26,6 +19,7 @@ public class Model
 {
 	private Path dataDirectory;
 	private Path demucsPath;
+	private Path pluginDirectory;
 
 	private ObservableList<SavedSong> savedSongs;
 	private SavedSong selectedSong;
@@ -34,9 +28,15 @@ public class Model
 	{
 		savedSongs = FXCollections.observableArrayList();
 		Path currentDirectory = Paths.get(System.getProperty("user.dir"));
-		this.dataDirectory = LoadFile.getDirectory(currentDirectory,"data");
-		this.demucsPath = currentDirectory.resolve("bin/demucs/RunDemucs.exe");
+		this.dataDirectory = LoadFile.getDirectory(currentDirectory, "data");
+		this.pluginDirectory = LoadFile.getDirectory(currentDirectory, "plugins");
+		this.demucsPath = pluginDirectory.resolve("demucs/RunDemucs.exe");
 		if(!Files.exists(demucsPath)){ this.demucsPath = null; }
+	}
+
+	public Path getPluginDirectory()
+	{
+		return pluginDirectory;
 	}
 
 	public SavedSong getSelectedSong()
