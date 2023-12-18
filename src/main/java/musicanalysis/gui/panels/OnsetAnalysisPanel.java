@@ -82,4 +82,10 @@ public class OnsetAnalysisPanel extends AnalysisPanel
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	protected void evaluate(ActionEvent event)
+	{
+
+	}
 }

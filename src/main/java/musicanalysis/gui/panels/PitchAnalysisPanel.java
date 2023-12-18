@@ -4,12 +4,11 @@ import musicanalysis.gui.SavedSong;
 import musicanalysis.PitchDetectionAlgorithm;
 import musicanalysis.io.LoadData;
 
-//Should be moved to AnalysisPanel at some point
 import javafx.collections.ObservableList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-
 import javafx.event.ActionEvent;
+
 import java.nio.file.Path;
 
 
@@ -26,6 +25,7 @@ public class PitchAnalysisPanel extends AnalysisPanel<PitchDetectionAlgorithm>
 	{
 		model = new PitchAnalysisModel();
 		super.initialize();
+		evaluateButton.setVisible(true);
 	}
 
 	@Override
@@ -99,6 +99,12 @@ public class PitchAnalysisPanel extends AnalysisPanel<PitchDetectionAlgorithm>
 
 	@Override
 	protected void preview(ActionEvent event)
+	{
+
+	}
+
+	@Override
+	protected void evaluate(ActionEvent event)
 	{
 
 	}

@@ -75,8 +75,15 @@ public class LaunchNewWindow
 		effect.setData(onsetArray);
 	}
 
-	// public static void launchEvaluation(Path songPath, AlgorithmType evalType)
-	// {
-
-	// }
+	public static void launchPitchEvaluation() throws Exception
+	{
+		FXMLLoader fxmlLoader1 = new FXMLLoader(GUI.class.getResource("eval_window.fxml"));
+		Pane root = fxmlLoader1.load();
+		// PreviewController previewController1 = fxmlLoader1.getController();
+		Stage stage1 = new Stage();
+		stage1.setTitle("Evaluate Pitch");
+		stage1.setScene(new Scene(root));
+		stage1.initModality(Modality.APPLICATION_MODAL);
+		stage1.show();
+	}
 }

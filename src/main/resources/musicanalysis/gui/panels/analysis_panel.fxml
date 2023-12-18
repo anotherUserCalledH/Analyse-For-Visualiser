@@ -19,5 +19,6 @@
 		<ImageView fx:id="statusIcon"/>
 		<Label fx:id="statusLabel"/>
 		<Button fx:id="previewButton" text="Preview" onAction="#preview" visible="false"/>
+		<Button fx:id="evaluateButton" text="Evaluate" onAction="#evaluate" visible="false"/>
 	</HBox>
 </fx:root>

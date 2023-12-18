@@ -1,7 +1,6 @@
 package musicanalysis.gui;
 
 import musicanalysis.io.LoadFile;
-import musicanalysis.SeparateTracks;
 
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
@@ -13,7 +12,8 @@ import java.io.File;
 import java.util.List;
 
 import java.lang.Process;
-
+import java.lang.ProcessBuilder;
+import java.io.IOException;
 
 public class Model
 {
@@ -89,6 +89,30 @@ public class Model
 		return saveSuccessful;
 	}
 
+	private Process separateAudioFile(Path demucsPath, Path inputPath, Path outputPath)
+	{
+		String demucsPathString = demucsPath.toAbsolutePath().toString();
+		String inputPathString = inputPath.toAbsolutePath().toString();
+		String outputPathString = outputPath.toAbsolutePath().toString();
+		String outputCommand = "-o" + outputPathString;
+
+		ProcessBuilder demucsPB = new ProcessBuilder();
+		demucsPB.command(demucsPathString, inputPathString, outputCommand);
+
+		Process demucs = null;		
+
+		try
+		{
+			demucs = demucsPB.start();
+		}		
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		return demucs;
+	}
+
 	public Process runSourceSeparation()
 	{
 		Path selectedSongFile = selectedSong.getSongFile();
@@ -96,7 +120,8 @@ public class Model
 
 		if(demucsPath != null)
 		{
-			demucs = SeparateTracks.separateAudioFile(demucsPath, selectedSongFile, dataDirectory);
+
+			demucs = separateAudioFile(demucsPath, selectedSongFile, dataDirectory);
 		}
 		else
 		{

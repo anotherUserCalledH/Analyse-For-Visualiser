@@ -49,6 +49,9 @@ public abstract class AnalysisPanel<T> extends HBox
 	protected Button analyseButton;
 
 	@FXML
+	protected Button evaluateButton;
+
+	@FXML
 	protected ImageView statusIcon;
 
 	@FXML
@@ -161,4 +164,7 @@ public abstract class AnalysisPanel<T> extends HBox
 
 	@FXML
 	protected abstract void preview(ActionEvent event);
+
+	@FXML
+	protected abstract void evaluate(ActionEvent event);
 }
