@@ -1,6 +1,5 @@
 package musicanalysis.gui.panels;
 
-import musicanalysis.gui.SavedSong;
 import musicanalysis.gui.LaunchNewWindow;
 import musicanalysis.AnalyseMusic;
 import musicanalysis.io.LoadData;

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml" spacing="10" GridPane.columnIndex="1" alignment="TOP_CENTER" styleClass="padded-container">
+    <Label text="Load Previous Song" styleClass="header"/>
+    <ListView fx:id="savedSongsListView" maxHeight="210.0"/>
+</fx:root>
+

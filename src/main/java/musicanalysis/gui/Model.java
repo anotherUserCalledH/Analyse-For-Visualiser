@@ -18,15 +18,12 @@ import java.io.IOException;
 public class Model
 {
 	private Path dataDirectory;
+
 	private Path demucsPath;
 	private Path pluginDirectory;
 
-	private ObservableList<SavedSong> savedSongs;
-	private SavedSong selectedSong;
-
 	public Model()
 	{
-		savedSongs = FXCollections.observableArrayList();
 		Path currentDirectory = Paths.get(System.getProperty("user.dir"));
 		this.dataDirectory = LoadFile.getDirectory(currentDirectory, "data");
 		this.pluginDirectory = LoadFile.getDirectory(currentDirectory, "plugins");
@@ -39,35 +36,7 @@ public class Model
 		return pluginDirectory;
 	}
 
-	public SavedSong getSelectedSong()
-	{
-		return selectedSong;
-	}
-
-	public void setSelectedSong(SavedSong selectedSong)
-	{
-		this.selectedSong = selectedSong;
-	}
-
-	public ObservableList<SavedSong> getSavedSongs()
-	{
-		List<Path> storageDirectories = LoadFile.listStorageDirectories(dataDirectory);
-		for(Path storageDirectory : storageDirectories)
-		{
-			String songName = storageDirectory.getFileName().toString();
-			Path songFile = LoadFile.findSongFile(storageDirectory);
-
-			if(songFile != null)
-			{
-				SavedSong currentSavedSong = new SavedSong(songName, storageDirectory, songFile);
-				savedSongs.add(currentSavedSong);
-			}
-		}
-
-		return savedSongs;
-	}
-
-	public boolean saveFile(File chosenFile)
+	public SavedSong saveFile(File chosenFile)
 	{
 		Path chosenFilePath = chosenFile.toPath();
 		String fullFileName = chosenFilePath.getFileName().toString();
@@ -77,19 +46,20 @@ public class Model
 		Path storageDirectory = LoadFile.getDirectory(dataDirectory, fileName);
 		Path savedFile = LoadFile.storeFile(chosenFilePath, storageDirectory, fullFileName);
 
-		boolean saveSuccessful = false;
+		SavedSong newSong = null;
 		if(savedFile != null)
 		{
-			SavedSong currentSavedSong = new SavedSong(fileName, storageDirectory, savedFile);
-			savedSongs.add(currentSavedSong);
-			setSelectedSong(currentSavedSong);
-			saveSuccessful = true;
+			newSong = new SavedSong(fileName, storageDirectory, savedFile);
+		}
+		else
+		{
+			System.err.println("Error with file");
 		}
 
-		return saveSuccessful;
+		return newSong;
 	}
 
-	private Process separateAudioFile(Path demucsPath, Path inputPath, Path outputPath)
+	private Process buildDemucsProcess(Path demucsPath, Path inputPath, Path outputPath)
 	{
 		String demucsPathString = demucsPath.toAbsolutePath().toString();
 		String inputPathString = inputPath.toAbsolutePath().toString();
@@ -113,22 +83,22 @@ public class Model
 		return demucs;
 	}
 
-	public Process runSourceSeparation()
+	public ProgressUpdater runSourceSeparation(SavedSong songForSeparation)
 	{
-		Path selectedSongFile = selectedSong.getSongFile();
-		Process demucs = null;
+		Path selectedSongFile = songForSeparation.getSongFile();
+		ProgressUpdater task = null;
 
 		if(demucsPath != null)
 		{
-
-			demucs = separateAudioFile(demucsPath, selectedSongFile, dataDirectory);
+			Process demucs = buildDemucsProcess(demucsPath, selectedSongFile, dataDirectory);
+			task = new ProgressUpdater(demucs);
 		}
 		else
 		{
 			System.err.println("Demucs source separation model not found.");
 		}
 
-		return demucs;
+		return task;
 	}
 
 	public static void checkSourceSeparation(SavedSong songForSeparation)

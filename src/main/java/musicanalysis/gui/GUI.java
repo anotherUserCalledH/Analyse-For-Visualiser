@@ -18,11 +18,11 @@ public class GUI extends Application
 	@Override
 	public void start(Stage primaryStage) throws Exception
 	{
-		FXMLLoader fxmlLoader1 = new FXMLLoader(GUI.class.getResource("view.fxml"));
+		FXMLLoader fxmlLoader1 = new FXMLLoader(GUI.class.getResource("main_view.fxml"));
 		Parent root = fxmlLoader1.load();
 		Scene scene = new Scene(root, WIDTH, HEIGHT);
 
-		Controller controller = fxmlLoader1.getController();
+		MainController controller = fxmlLoader1.getController();
 
 		primaryStage.setTitle("GUI :)");
 		primaryStage.setScene(scene);

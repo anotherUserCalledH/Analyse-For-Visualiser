@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ListView?>
+<?import java.util.ArrayList?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import java.net.URL?>
+<?import javafx.scene.control.ChoiceBox?>
+
+<?import musicanalysis.gui.panels.BeatAnalysisPanel?>
+<?import musicanalysis.gui.panels.PitchAnalysisPanel?>
+<?import musicanalysis.gui.panels.OnsetAnalysisPanel?>
+<?import musicanalysis.gui.MainController?>
+
+
+<?import musicanalysis.gui.loadsong.LoadSongComponent?>
+<VBox xmlns:fx="http://javafx.com/fxml"
+	  fx:controller="musicanalysis.gui.MainController"
+	  alignment="CENTER">
+	<stylesheets>
+		<URL value="@style.css" />
+	</stylesheets>
+	<GridPane gridLinesVisible="false" alignment="TOP_CENTER">
+		<columnConstraints>
+			<ColumnConstraints percentWidth="33.3" />
+			<ColumnConstraints percentWidth="33.3" />
+			<ColumnConstraints percentWidth="33.3" />
+		</columnConstraints>
+		<VBox spacing="10" GridPane.columnIndex="0" alignment="TOP_CENTER" styleClass="padded-container">
+			<Label text="New Song" styleClass="header"/>
+			<Button text="Choose .wav File" onAction="#chooseNewFile"/>
+			<Label fx:id="fileNameLabel" text="Chosen Song: "/>
+			<Button fx:id="confirmButton" text="Confirm" onAction="#confirmFile" disable="true"/>
+		</VBox>
+		<LoadSongComponent fx:id="loadSongComponent" onAction="#selectFile"/>
+		<VBox spacing="10" GridPane.columnIndex="2" alignment="TOP_CENTER" styleClass="padded-container">
+			<Label text="Source Separation" styleClass="header"/>
+			<Label wrapText="true" text="Source separation is a prerequisite for several of the analysis algorithms. It can take up to 10 minutes, so it is advisable to begin it as soon as possible. You only need to do it once per song." style="-fx-border-color: black; -fx-text-alignment: CENTER; -fx-padding: 10px"/>
+			<Button fx:id="sourceSeparationButton" text="Begin Source Separation" onAction="#beginSourceSeparation"/>
+			<VBox fx:id="sourceSeparationMenu" alignment="CENTER">
+				<ProgressBar fx:id="separationProgressBar" />
+			</VBox>
+		</VBox>
+	</GridPane>
+	<BeatAnalysisPanel fx:id="beatPanel"/>
+	<PitchAnalysisPanel fx:id="pitchPanel"/>
+	<OnsetAnalysisPanel fx:id="onsetPanel"/>
+<!-- 			<padding>
+				<Insets left="20.0" right="20.0" bottom="20.0" top="20.0"/>
+			</padding> -->
+<!-- 	<fx:define>
+		<ArrayList fx:id="analyseButtons">
+			<fx:reference source="analyseBeatButton" /> 
+			<fx:reference source="analysePitchButton" />
+		</ArrayList>
+	</fx:define> -->
+</VBox>
+
