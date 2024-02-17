@@ -1,7 +1,8 @@
 package musicanalysis.gui.panels;
 
-import musicanalysis.gui.SavedSong;
-
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.HBox;
 import javafx.fxml.FXML;
@@ -10,14 +11,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+
+import musicanalysis.gui.SavedSong;
+
+import musicanalysis.algorithms.AnalysisAlgorithm;
+import musicanalysis.gui.panels.model.AnalysisData;
+import musicanalysis.gui.panels.model.PanelModel;
 
 import java.nio.file.Path;
 
-public abstract class AnalysisPanel<T> extends HBox
+public abstract class AnalysisPanel extends HBox
 {
 	private static Image defaultIcon;
 	private static Image tickIcon;
@@ -43,7 +48,7 @@ public abstract class AnalysisPanel<T> extends HBox
 	protected Label headerLabel;
 
 	@FXML
-	protected ChoiceBox<T> algorithmsChoiceBox;
+	protected ChoiceBox<AnalysisAlgorithm> algorithmsChoiceBox;
 
 	@FXML
 	protected Button analyseButton;
@@ -66,42 +71,54 @@ public abstract class AnalysisPanel<T> extends HBox
 	@FXML
 	protected HBox column1;
 
-	protected SavedSong selectedSong;
-	protected ReadOnlyDoubleProperty[] bindingProperty;
-	protected AnalysisModel<T> model;
+	protected PanelModel placeholderModel;
 
-	public AnalysisPanel() throws Exception
+	private String panelName;
+
+	protected ReadOnlyDoubleProperty[] bindingProperty;
+
+	public AnalysisPanel(PanelModel childModel, String panelName) throws Exception
 	{
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("analysis_panel.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
 		fxmlLoader.load();
+		this.placeholderModel = childModel;
+		this.panelName = panelName;
+		initialiseChoiceBox();
 	}
 
 	public void initialize()
 	{
-		initialiseChoiceBox();
 		initialiseStatus();
 		this.bindingProperty = new ReadOnlyDoubleProperty[] { column0.widthProperty(), column1.widthProperty() };
-	}
-
-	protected void setHeaderLabel(String panelName)
-	{
 		headerLabel.setText(panelName);
 	}
 
-	public void setPluginDirectory(Path pluginDirectory)
+	protected void initialiseChoiceBox()
 	{
-		
-	}
+		ObservableList<AnalysisAlgorithm> algorithms = placeholderModel.getAlgorithms();
 
-	public void setSelectedSong(SavedSong selectedSong)
-	{
-		this.selectedSong = selectedSong;
-		updateAnalysisStatus();
-	}
+		algorithmsChoiceBox.setItems(algorithms);
 
-	protected abstract void initialiseChoiceBox();
+		if(!algorithms.isEmpty())
+		{
+			algorithmsChoiceBox.getSelectionModel().select(algorithms.get(0));
+			placeholderModel.setChosenAlgorithm(algorithms.get(0));
+		}
+
+		algorithmsChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<AnalysisAlgorithm>()
+		{
+			@Override
+			public void changed(ObservableValue<? extends AnalysisAlgorithm> observable, AnalysisAlgorithm oldValue, AnalysisAlgorithm newValue)
+			{
+				if (newValue != null)
+				{
+					placeholderModel.setChosenAlgorithm(algorithmsChoiceBox.getSelectionModel().getSelectedItem());
+				}
+			}
+		});
+	}
 
 	protected void initialiseStatus()
 	{
@@ -113,8 +130,6 @@ public abstract class AnalysisPanel<T> extends HBox
 		previewButton.setVisible(false);
 	}
 
-	public abstract void updateAnalysisStatus();
-
 	public ReadOnlyDoubleProperty[] getBindingProperty()
 	{
 		return bindingProperty;
@@ -125,7 +140,6 @@ public abstract class AnalysisPanel<T> extends HBox
 		column0.minWidthProperty().bind(partnerBindingProperty[0]);
 		column1.minWidthProperty().bind(partnerBindingProperty[1]);
 	}
-
 
 	protected void setNotReady()
 	{
@@ -160,11 +174,36 @@ public abstract class AnalysisPanel<T> extends HBox
 	}
 
 	@FXML
-	protected abstract void analyse(ActionEvent event);
+	protected void analyse(ActionEvent event)
+	{
+		boolean analysisSuccessful = placeholderModel.analyse();
+		if(analysisSuccessful) { setComplete(); }
+		else { setFailed(); }
+	}
 
 	@FXML
-	protected abstract void preview(ActionEvent event);
+	protected void preview(ActionEvent event)
+	{
+		AnalysisData dataToPreview = placeholderModel.getAnalysisData();
+		Path songPath = placeholderModel.getSelectedSong().getSongFile();
+		buildPreview(dataToPreview, songPath);
+	}
 
 	@FXML
-	protected abstract void evaluate(ActionEvent event);
+	protected void evaluate(ActionEvent event)
+	{
+/*		SavedSong songToEvaluate = placeholderModel.getSelectedSong();
+		AlgorithmType windowType = placeholderModel.getAlgorithmType();
+		LaunchNewWindow.launchEvaluation(songToEvaluate);*/
+	}
+
+	public void setSelectedSong(SavedSong selectedSong)
+	{
+		placeholderModel.setSelectedSong(selectedSong);
+		updateAnalysisStatus(selectedSong);
+	}
+
+	protected abstract void buildPreview(AnalysisData dataToPreview, Path songPath);
+
+	public abstract void updateAnalysisStatus(SavedSong selectedSong);
 }

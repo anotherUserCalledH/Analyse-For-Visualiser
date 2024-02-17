@@ -8,7 +8,7 @@ import be.tarsos.dsp.pitch.PitchProcessor;
 
 import java.nio.file.Path;
 
-
+//Needs to refactored once more algorithms are added
 public class AnalyseMusic
 {
 	public static float[] detectBeat(Path audioFile)

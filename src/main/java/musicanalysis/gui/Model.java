@@ -1,15 +1,10 @@
 package musicanalysis.gui;
 
-import musicanalysis.io.LoadFile;
-
-import javafx.collections.ObservableList;
-import javafx.collections.FXCollections;
+import musicanalysis.structure.ManageDirectories;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.io.File;
-import java.util.List;
 
 import java.lang.Process;
 import java.lang.ProcessBuilder;
@@ -20,20 +15,12 @@ public class Model
 	private Path dataDirectory;
 
 	private Path demucsPath;
-	private Path pluginDirectory;
+
 
 	public Model()
 	{
-		Path currentDirectory = Paths.get(System.getProperty("user.dir"));
-		this.dataDirectory = LoadFile.getDirectory(currentDirectory, "data");
-		this.pluginDirectory = LoadFile.getDirectory(currentDirectory, "plugins");
-		this.demucsPath = pluginDirectory.resolve("demucs/RunDemucs.exe");
-		if(!Files.exists(demucsPath)){ this.demucsPath = null; }
-	}
-
-	public Path getPluginDirectory()
-	{
-		return pluginDirectory;
+		dataDirectory = ManageDirectories.DATA_DIRECTORY;
+		demucsPath = ManageDirectories.DEMUCS_DIRECTORY;
 	}
 
 	public SavedSong saveFile(File chosenFile)
@@ -43,8 +30,8 @@ public class Model
 		String[] splitFileName = fullFileName.split("\\.");
 
 		String fileName = splitFileName[0];
-		Path storageDirectory = LoadFile.getDirectory(dataDirectory, fileName);
-		Path savedFile = LoadFile.storeFile(chosenFilePath, storageDirectory, fullFileName);
+		Path storageDirectory = ManageDirectories.getDirectory(dataDirectory, fileName);
+		Path savedFile = ManageDirectories.storeFile(chosenFilePath, storageDirectory, fullFileName);
 
 		SavedSong newSong = null;
 		if(savedFile != null)
@@ -88,7 +75,7 @@ public class Model
 		Path selectedSongFile = songForSeparation.getSongFile();
 		ProgressUpdater task = null;
 
-		if(demucsPath != null)
+		if(Files.exists(demucsPath))
 		{
 			Process demucs = buildDemucsProcess(demucsPath, selectedSongFile, dataDirectory);
 			task = new ProgressUpdater(demucs);
@@ -104,10 +91,8 @@ public class Model
 	public static void checkSourceSeparation(SavedSong songForSeparation)
 	{
 		Path vocalsFile = songForSeparation.getVocalsFile();
-		boolean separationSuccessful = false;
 		if(Files.exists(vocalsFile))
 		{
-			separationSuccessful = true;
 			songForSeparation.setHasSeparatedAudio(true);
 		}
 	}

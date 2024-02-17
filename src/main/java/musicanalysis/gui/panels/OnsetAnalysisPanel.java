@@ -1,6 +1,9 @@
 package musicanalysis.gui.panels;
 
 import musicanalysis.AnalyseMusic;
+import musicanalysis.gui.SavedSong;
+import musicanalysis.gui.panels.model.AnalysisData;
+import musicanalysis.gui.panels.model.OnsetPanelModel;
 import musicanalysis.io.LoadData;
 import musicanalysis.gui.LaunchNewWindow;
 
@@ -12,17 +15,12 @@ public class OnsetAnalysisPanel extends AnalysisPanel
 {
 	public OnsetAnalysisPanel() throws Exception
 	{
-		setHeaderLabel("ONSET");
+		super(new OnsetPanelModel(), "ONSET");
 	}
 
-	@Override
-	protected void initialiseChoiceBox()
-	{
-
-	}
 
 	@Override
-	public void updateAnalysisStatus()
+	public void updateAnalysisStatus(SavedSong selectedSong)
 	{
 		if(selectedSong.checkHasSeparatedAudio() == true)
 		{
@@ -40,38 +38,10 @@ public class OnsetAnalysisPanel extends AnalysisPanel
 			setNotReady();
 		}
 	}
-
-	protected void analyseOnsets()
-	{
-		Path selectedSongFile = selectedSong.getVocalsFile();
-		float[] onsetData = AnalyseMusic.detectOnsets(selectedSongFile);
-
-		Path onsetDataFile = selectedSong.getOnsetDataFile();
-		LoadData.writeOnsetData(onsetData, onsetDataFile);
-		selectedSong.setHasOnsetData(true);
-	}
-
-	protected float[] getOnsetData()
-	{
-		Path onsetDataFile = selectedSong.getOnsetDataFile();
-		float[] onsetData = LoadData.readOnsetData(onsetDataFile);
-
-		return onsetData;
-	}
-
 	@Override
-	protected void analyse(ActionEvent event)
+	protected void buildPreview(AnalysisData dataToPreview, Path songPath)
 	{
-		analyseOnsets();
-		setComplete();
-	}
-
-	@Override
-	protected void preview(ActionEvent event)
-	{
-		Path songPath = selectedSong.getSongFile();
-		float[] onsetData = getOnsetData();
-
+		float[] onsetData = (float[]) dataToPreview.getData();
 		try
 		{
 			LaunchNewWindow.launchOnsetPreview(songPath, onsetData);
@@ -80,11 +50,5 @@ public class OnsetAnalysisPanel extends AnalysisPanel
 		{
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	protected void evaluate(ActionEvent event)
-	{
-
 	}
 }

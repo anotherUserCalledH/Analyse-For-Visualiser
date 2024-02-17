@@ -83,22 +83,11 @@ public class MainController
 		onsetPanel.setSelectedSong(selectedSong);
 	}
 
-	private void updatePanelStatus()
-	{
-		beatPanel.updateAnalysisStatus();
-		pitchPanel.updateAnalysisStatus();
-		onsetPanel.updateAnalysisStatus();
-	}
-
 	private void initialisePanels()
 	{
 		beatPanel.bindPanel(onsetPanel.getBindingProperty());
 		pitchPanel.bindPanel(beatPanel.getBindingProperty());
 		onsetPanel.bindPanel(pitchPanel.getBindingProperty());
-
-		beatPanel.setPluginDirectory(model1.getPluginDirectory());
-		pitchPanel.setPluginDirectory(model1.getPluginDirectory());
-		onsetPanel.setPluginDirectory(model1.getPluginDirectory());
 	}
 
 	@FXML
@@ -150,7 +139,7 @@ public class MainController
 				public void handle(WorkerStateEvent succeeded)
 				{
 					Model.checkSourceSeparation(SONG_FOR_SEPARATION);
-					updatePanelStatus();
+					updatePanelSong(loadSongComponent.getSelectedSong());
 				}
 			});
 

@@ -1,31 +1,31 @@
-package musicanalysis.gui.panels;
+package musicanalysis.structure;
 
-import javafx.collections.FXCollections;
-import java.nio.file.Path;
+import musicanalysis.algorithms.AnalysisAlgorithm;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
-import java.util.stream.Stream;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import javafx.collections.ObservableList;
-import java.io.IOException;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
-public abstract class AnalysisModel<T>
+public abstract class PluginLoader
 {
-	protected String subdirectoryName;
-	protected ObservableList<T> algorithms = FXCollections.observableArrayList();
+	protected String pluginDirectoryName;
+	protected ArrayList<AnalysisAlgorithm> algorithms;
 
-	public ObservableList<T> getAlgorithms()
+	public PluginLoader(String pluginDirectoryName)
 	{
-		return algorithms;
+		this.algorithms = new ArrayList<AnalysisAlgorithm>();
+		this.pluginDirectoryName = pluginDirectoryName;
 	}
-
-	protected abstract void addToAlgorithms(Class<?> newClass);
 
 	protected static URL[] listJarFiles(Path pluginDirectory)
 	{
@@ -65,16 +65,17 @@ public abstract class AnalysisModel<T>
 		return jarURLs;
 	}
 
-	public void loadPlugins(Path pluginPath)
+	public ArrayList<AnalysisAlgorithm> importAlgorithms()
 	{
-		Path subdirectoryPath = pluginPath.resolve(subdirectoryName);
-		if(Files.exists(subdirectoryPath))
+		Path pluginPath = ManageDirectories.PLUGIN_DIRECTORY;
+		Path pluginDirectory = pluginPath.resolve(pluginDirectoryName);
+		if(Files.exists(pluginDirectory))
 		{
-			URL[] jarURLs = listJarFiles(subdirectoryPath);
+			URL[] jarURLs = listJarFiles(pluginDirectory);
 
 			if(jarURLs.length > 0)
 			{
-				ClassLoader mainClassLoader = AnalysisModel.class.getClassLoader();
+				ClassLoader mainClassLoader = PluginLoader.class.getClassLoader();
 				URLClassLoader classLoader = new URLClassLoader(jarURLs, mainClassLoader);
 
 				for(URL jarURL : jarURLs)
@@ -91,7 +92,11 @@ public abstract class AnalysisModel<T>
 					}
 				}
 			}
-		}	
-	}
-}
+		}
 
+		return algorithms;
+	}
+
+	protected abstract void addToAlgorithms(Class<?> newClass);
+
+}

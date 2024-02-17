@@ -1,64 +1,22 @@
 package musicanalysis.gui.panels;
 
+import musicanalysis.gui.LaunchNewWindow;
 import musicanalysis.gui.SavedSong;
-import musicanalysis.PitchDetectionAlgorithm;
-import musicanalysis.io.LoadData;
-
-import javafx.collections.ObservableList;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
+import musicanalysis.gui.panels.model.AnalysisData;
+import musicanalysis.gui.panels.model.PitchPanelModel;
 
 import java.nio.file.Path;
 
 
-public class PitchAnalysisPanel extends AnalysisPanel<PitchDetectionAlgorithm>
+public class PitchAnalysisPanel extends AnalysisPanel
 {
-	private PitchDetectionAlgorithm chosenPitchAlgorithm;
-
 	public PitchAnalysisPanel() throws Exception
 	{
-		setHeaderLabel("PITCH");
-	}
-
-	public void initialize()
-	{
-		model = new PitchAnalysisModel();
-		super.initialize();
-		evaluateButton.setVisible(true);
+		super(new PitchPanelModel(), "PITCH");
 	}
 
 	@Override
-	public void setPluginDirectory(Path pluginDirectory)
-	{
-		model.loadPlugins(pluginDirectory);
-	}
-
-	@Override
-	protected void initialiseChoiceBox()
-	{
-		ObservableList<PitchDetectionAlgorithm> algorithms = model.getAlgorithms();
-		
-		algorithmsChoiceBox.setItems(algorithms);
-		algorithmsChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PitchDetectionAlgorithm>()
-		{
-			@Override
-			public void changed(ObservableValue<? extends PitchDetectionAlgorithm> observable, PitchDetectionAlgorithm oldValue, PitchDetectionAlgorithm newValue)
-			{
-			if (newValue != null)
-				{
-					chosenPitchAlgorithm = (PitchDetectionAlgorithm) algorithmsChoiceBox.getSelectionModel().getSelectedItem();
-					if(selectedSong.checkHasSeparatedAudio())
-					{
-						setReady();
-					}
-				}
-			}
-		});
-	}
-
-	@Override
-	public void updateAnalysisStatus()
+	public void updateAnalysisStatus(SavedSong selectedSong)
 	{
 		if(selectedSong.checkHasSeparatedAudio() == true)
 		{
@@ -80,32 +38,17 @@ public class PitchAnalysisPanel extends AnalysisPanel<PitchDetectionAlgorithm>
 		previewButton.setVisible(false);
 	}
 
-	protected void analysePitch(PitchDetectionAlgorithm pitchAlgorithm, SavedSong selectedSong)
-	{
-		Path selectedSongFile = selectedSong.getVocalsFile();
-		int[] pitchData = pitchAlgorithm.getPitchArray(selectedSongFile);
-
-		Path pitchDataFile = selectedSong.getPitchDataFile();
-		LoadData.writePitchData(pitchData, pitchDataFile);
-		selectedSong.setHasPitchData(true);
-	}
-
 	@Override
-	protected void analyse(ActionEvent event)
+	protected void buildPreview(AnalysisData dataToPreview, Path songPath)
 	{
-		analysePitch(chosenPitchAlgorithm, selectedSong);
-		setComplete();
-	}
-
-	@Override
-	protected void preview(ActionEvent event)
-	{
-
-	}
-
-	@Override
-	protected void evaluate(ActionEvent event)
-	{
-
+		int[] pitchData = (int[]) dataToPreview.getData();
+		try
+		{
+			LaunchNewWindow.launchPitchPreview(songPath, pitchData);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

@@ -1,11 +1,14 @@
-package musicanalysis;
+package musicanalysis.algorithms;
 
 import be.tarsos.dsp.pitch.PitchProcessor;
+import musicanalysis.AnalyseMusic;
+import musicanalysis.gui.panels.model.AnalysisData;
+
 import java.nio.file.Path;
 
-public class TarsosPitchAlgorithm implements PitchDetectionAlgorithm
+public class TarsosPitchAlgorithm implements PitchAlgorithm
 {
-	private int size = 1024;
+	private int windowSize = 1024;
 	private int overlap = 0;
 	private int sampleRate = 16000;
 
@@ -19,7 +22,7 @@ public class TarsosPitchAlgorithm implements PitchDetectionAlgorithm
 	@Override
 	public int getHopSize()
 	{
-		int hopSize = size - overlap;
+		int hopSize = windowSize - overlap;
 		return hopSize;
 	}
 
@@ -30,9 +33,9 @@ public class TarsosPitchAlgorithm implements PitchDetectionAlgorithm
 	}
 
 	@Override
-	public int[] getPitchArray(Path audioFile)
+	public AnalysisData analyse(Path audioFile)
 	{
-		return AnalyseMusic.detectPitch(audioFile, algorithm);
+		return new AnalysisData(AnalyseMusic.detectPitch(audioFile, algorithm));
 	}
 
 	@Override

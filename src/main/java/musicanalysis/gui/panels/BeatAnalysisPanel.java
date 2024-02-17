@@ -2,6 +2,9 @@ package musicanalysis.gui.panels;
 
 import musicanalysis.gui.LaunchNewWindow;
 import musicanalysis.AnalyseMusic;
+import musicanalysis.gui.SavedSong;
+import musicanalysis.gui.panels.model.AnalysisData;
+import musicanalysis.gui.panels.model.BeatPanelModel;
 import musicanalysis.io.LoadData;
 
 import javafx.event.ActionEvent;
@@ -11,11 +14,11 @@ public class BeatAnalysisPanel extends AnalysisPanel
 {
 	public BeatAnalysisPanel() throws Exception
 	{
-		setHeaderLabel("BEAT");
+		super(new BeatPanelModel(), "BEAT");
 	}
 
 	@Override
-	public void updateAnalysisStatus()
+	public void updateAnalysisStatus(SavedSong selectedSong)
 	{
 		if(selectedSong.checkHasBeatData() == true)
 		{
@@ -28,50 +31,9 @@ public class BeatAnalysisPanel extends AnalysisPanel
 	}
 
 	@Override
-	protected void initialiseChoiceBox()
+	protected void buildPreview(AnalysisData dataToPreview, Path songPath)
 	{
-	}
-
-	protected boolean analyseBeat()
-	{
-		Path selectedSongFile = selectedSong.getSongFile();
-		float[] beatData = AnalyseMusic.detectBeat(selectedSongFile);
-		boolean detectionSuccessful = false;
-
-		if(beatData != null)
-		{
-			Path beatDataFile = selectedSong.getBeatDataFile();
-			LoadData.writeBeatData(beatData, beatDataFile);
-			//Should probably in boolean return value to LoadData to check for errors
-			selectedSong.setHasBeatData(true);
-			detectionSuccessful = true;
-		}
-
-		return detectionSuccessful;
-	}
-
-	protected float[] getBeatData()
-	{
-		Path beatDataFile = selectedSong.getBeatDataFile();
-		float[] beatData = LoadData.readBeatData(beatDataFile);
-
-		return beatData;
-	}
-
-	@Override
-	protected void analyse(ActionEvent event)
-	{
-		boolean detectionSuccessful = analyseBeat();
-		if(detectionSuccessful) { setComplete(); }
-		else { setFailed(); }
-	}
-
-	@Override
-	protected void preview(ActionEvent event)
-	{
-		Path songPath = selectedSong.getSongFile();
-		float[] beatData = getBeatData();
-
+		float[] beatData = (float[]) dataToPreview.getData();
 		try
 		{
 			LaunchNewWindow.launchBeatPreview(songPath, beatData);
@@ -80,11 +42,5 @@ public class BeatAnalysisPanel extends AnalysisPanel
 		{
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	protected void evaluate(ActionEvent event)
-	{
-
 	}
 }

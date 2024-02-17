@@ -75,21 +75,25 @@ public class LaunchNewWindow
 		effect.setData(onsetArray);
 	}
 
-/*	public static void launchEvaluation(String title, AnalysisModel<T> model) throws Exception
+	public static void launchPitchPreview(Path songPath, int[] pitchArray) throws Exception
+	{
+	}
+
+	public static void launchEvaluation(SavedSong songToEvaluate) throws Exception
 	{
 
 	}
 
-	public static void launchPitchEvaluation() throws Exception
-	{
-		FXMLLoader fxmlLoader1 = new FXMLLoader(GUI.class.getResource("eval_window.fxml"));
-		Pane root = fxmlLoader1.load();
-		PreviewController previewController1 = fxmlLoader1.getController();
-		Stage stage1 = new Stage();
-		stage1.setTitle("Evaluate Pitch");
-		stage1.setScene(new Scene(root));
-		stage1.initModality(Modality.APPLICATION_MODAL);
-		stage1.show();
-
-	}*/
+//	public static void launchPitchEvaluation() throws Exception
+//	{
+//		FXMLLoader fxmlLoader1 = new FXMLLoader(GUI.class.getResource("eval_window.fxml"));
+//		Pane root = fxmlLoader1.load();
+//		PreviewController previewController1 = fxmlLoader1.getController();
+//		Stage stage1 = new Stage();
+//		stage1.setTitle("Evaluate Pitch");
+//		stage1.setScene(new Scene(root));
+//		stage1.initModality(Modality.APPLICATION_MODAL);
+//		stage1.show();
+//
+//	}
 }
