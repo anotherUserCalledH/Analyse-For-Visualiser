@@ -2,7 +2,6 @@ package musicanalysis.algorithms;
 
 import be.tarsos.dsp.pitch.PitchProcessor;
 import musicanalysis.AnalyseMusic;
-import musicanalysis.gui.panels.model.AnalysisData;
 
 import java.nio.file.Path;
 
@@ -27,15 +26,15 @@ public class TarsosPitchAlgorithm implements PitchAlgorithm
 	}
 
 	@Override
-	public float getSampleRate()
+	public int getSampleRate()
 	{
 		return sampleRate;
 	}
 
 	@Override
-	public AnalysisData analyse(Path audioFile)
+	public int[] analyse(Path audioFile)
 	{
-		return new AnalysisData(AnalyseMusic.detectPitch(audioFile, algorithm));
+		return AnalyseMusic.detectPitch(audioFile, algorithm);
 	}
 
 	@Override

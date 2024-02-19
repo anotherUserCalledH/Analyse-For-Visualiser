@@ -1,16 +1,25 @@
 package musicanalysis.structure;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+
 import musicanalysis.algorithms.OnsetAlgorithm;
 import musicanalysis.algorithms.TarsosOnsetAlgorithm;
 
 public class OnsetPluginLoader extends PluginLoader
 {
+	private ArrayList<OnsetAlgorithm> algorithms;
     public OnsetPluginLoader()
     {
-        super("onset");
+		algorithms = new ArrayList<OnsetAlgorithm>();
         initialise();
+		importAlgorithms("onset");
     }
+
+	public ArrayList<OnsetAlgorithm> getAlgorithms()
+	{
+		return algorithms;
+	}
     private void initialise()
     {
         OnsetAlgorithm defaultAlgorithm = (OnsetAlgorithm) new TarsosOnsetAlgorithm("Complex");

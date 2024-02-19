@@ -2,17 +2,28 @@ package musicanalysis.structure;
 
 import be.tarsos.dsp.pitch.PitchProcessor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
+import musicanalysis.algorithms.AnalysisAlgorithm;
 import musicanalysis.algorithms.PitchAlgorithm;
 import musicanalysis.algorithms.TarsosPitchAlgorithm;
 
 public class PitchPluginLoader extends PluginLoader
 {
+	private ArrayList<PitchAlgorithm> algorithms;
+
 	public PitchPluginLoader()
 	{
-		super("pitch");
+		algorithms = new ArrayList<PitchAlgorithm>();
 		initialise();
+		importAlgorithms("pitch");
 	}
+
+	public ArrayList<PitchAlgorithm> getAlgorithms()
+	{
+		return algorithms;
+	}
+
 	private void initialise()
 	{
 		for(PitchProcessor.PitchEstimationAlgorithm pitchAlgorithm : PitchProcessor.PitchEstimationAlgorithm.values())

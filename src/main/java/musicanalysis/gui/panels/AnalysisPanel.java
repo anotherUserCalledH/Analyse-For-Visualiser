@@ -4,25 +4,24 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.geometry.Side;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 
 import musicanalysis.gui.SavedSong;
 
 import musicanalysis.algorithms.AnalysisAlgorithm;
-import musicanalysis.gui.panels.model.AnalysisData;
+import musicanalysis.gui.windows.AnalysisData;
 import musicanalysis.gui.panels.model.PanelModel;
 
 import java.nio.file.Path;
 
-public abstract class AnalysisPanel extends HBox
+public abstract class AnalysisPanel<T extends AnalysisAlgorithm> extends HBox
 {
 	private static Image defaultIcon;
 	private static Image tickIcon;
@@ -48,13 +47,13 @@ public abstract class AnalysisPanel extends HBox
 	protected Label headerLabel;
 
 	@FXML
-	protected ChoiceBox<AnalysisAlgorithm> algorithmsChoiceBox;
+	protected ChoiceBox<T> algorithmsChoiceBox;
 
 	@FXML
 	protected Button analyseButton;
 
 	@FXML
-	protected Button evaluateButton;
+	protected Button optionsButton;
 
 	@FXML
 	protected ImageView statusIcon;
@@ -71,13 +70,16 @@ public abstract class AnalysisPanel extends HBox
 	@FXML
 	protected HBox column1;
 
-	protected PanelModel placeholderModel;
+	@FXML
+	protected ContextMenu options;
+
+	protected PanelModel<T> placeholderModel;
 
 	private String panelName;
 
 	protected ReadOnlyDoubleProperty[] bindingProperty;
 
-	public AnalysisPanel(PanelModel childModel, String panelName) throws Exception
+	public AnalysisPanel(PanelModel<T> childModel, String panelName) throws Exception
 	{
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("analysis_panel.fxml"));
 		fxmlLoader.setRoot(this);
@@ -97,7 +99,7 @@ public abstract class AnalysisPanel extends HBox
 
 	protected void initialiseChoiceBox()
 	{
-		ObservableList<AnalysisAlgorithm> algorithms = placeholderModel.getAlgorithms();
+		ObservableList<T> algorithms = placeholderModel.getAlgorithms();
 
 		algorithmsChoiceBox.setItems(algorithms);
 
@@ -190,11 +192,14 @@ public abstract class AnalysisPanel extends HBox
 	}
 
 	@FXML
+	protected void showOptions(ActionEvent event)
+	{
+		options.show(optionsButton, Side.BOTTOM, 0, 0);
+	}
+	@FXML
 	protected void evaluate(ActionEvent event)
 	{
-/*		SavedSong songToEvaluate = placeholderModel.getSelectedSong();
-		AlgorithmType windowType = placeholderModel.getAlgorithmType();
-		LaunchNewWindow.launchEvaluation(songToEvaluate);*/
+
 	}
 
 	public void setSelectedSong(SavedSong selectedSong)

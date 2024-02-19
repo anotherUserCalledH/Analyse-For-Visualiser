@@ -1,4 +1,4 @@
-package musicanalysis.gui;
+package musicanalysis.gui.windows;
 
 import musicanalysis.preview.PreviewVisualiser;
 

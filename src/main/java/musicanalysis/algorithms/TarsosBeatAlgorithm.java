@@ -1,7 +1,6 @@
 package musicanalysis.algorithms;
 
 import musicanalysis.AnalyseMusic;
-import musicanalysis.gui.panels.model.AnalysisData;
 
 import java.nio.file.Path;
 
@@ -25,15 +24,15 @@ public class TarsosBeatAlgorithm implements BeatAlgorithm
     }
 
     @Override
-    public float getSampleRate()
+    public int getSampleRate()
     {
         return sampleRate;
     }
 
     @Override
-    public AnalysisData analyse(Path audioFile)
+    public float[] analyse(Path audioFile)
     {
-        return new AnalysisData(AnalyseMusic.detectBeat(audioFile));
+        return AnalyseMusic.detectBeat(audioFile);
     }
 
     @Override

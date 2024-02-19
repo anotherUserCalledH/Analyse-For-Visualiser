@@ -24,7 +24,7 @@ public class GUI extends Application
 
 		MainController controller = fxmlLoader1.getController();
 
-		primaryStage.setTitle("GUI :)");
+		primaryStage.setTitle("GUI");
 		primaryStage.setScene(scene);
 		primaryStage.setOnCloseRequest(event -> System.exit(0));
 		primaryStage.show();

@@ -1,16 +1,15 @@
 package musicanalysis.gui.panels;
 
-import musicanalysis.gui.LaunchNewWindow;
-import musicanalysis.AnalyseMusic;
+import musicanalysis.algorithms.BeatAlgorithm;
+import musicanalysis.gui.windows.LaunchNewWindow;
 import musicanalysis.gui.SavedSong;
-import musicanalysis.gui.panels.model.AnalysisData;
+import musicanalysis.gui.windows.AnalysisData;
 import musicanalysis.gui.panels.model.BeatPanelModel;
-import musicanalysis.io.LoadData;
 
-import javafx.event.ActionEvent;
+import java.io.IOException;
 import java.nio.file.Path;
 
-public class BeatAnalysisPanel extends AnalysisPanel
+public class BeatAnalysisPanel extends AnalysisPanel<BeatAlgorithm>
 {
 	public BeatAnalysisPanel() throws Exception
 	{
@@ -38,7 +37,7 @@ public class BeatAnalysisPanel extends AnalysisPanel
 		{
 			LaunchNewWindow.launchBeatPreview(songPath, beatData);
 		}
-		catch(Exception e)
+		catch(IOException e)
 		{
 			e.printStackTrace();
 		}

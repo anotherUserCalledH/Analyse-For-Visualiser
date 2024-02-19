@@ -1,6 +1,4 @@
-package musicanalysis.gui.panels.model;
-
-import musicanalysis.gui.SavedSong;
+package musicanalysis.gui.windows;
 
 public class AnalysisData
 {
@@ -15,5 +13,4 @@ public class AnalysisData
     {
         return analysisData;
     }
-
 }

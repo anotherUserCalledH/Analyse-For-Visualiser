@@ -3,7 +3,7 @@
 
 //Used for testing pitch data
 
-package project.io;
+package musicanalysis.io;
 
 import java.io.File;
 import javax.sound.midi.MidiSystem;
@@ -24,8 +24,6 @@ public class LoadMIDI
 	{
 		MELODY, BASSLINE
 	}
-
-	private static final int SAMPLE_RATE = 44100;
 
 	private static int[] convertToPitchArray(long noteData[][], int noFrames, double millisecondsPerTick, float windowSize, boolean includeNoteEndings) //needs to be refactored once a unit test is created
 	{
@@ -209,7 +207,7 @@ public class LoadMIDI
 		return bpm;
 	}
 
-	public static int[] importMIDI(String inputFilePath, TrackType chosenTrack, boolean includeNoteEndings)
+	public static int[] importMIDI(String inputFilePath, TrackType chosenTrack, float windowSizeMillis, boolean includeNoteEndings)
 	{
 		Sequence inputSequence = null;
 
@@ -231,7 +229,7 @@ public class LoadMIDI
 		double millisecondsPerTick = getResolution(inputSequence, bpm);
 		long lengthInTicks = inputSequence.getTickLength();
 		double lengthInMilliseconds = lengthInTicks*millisecondsPerTick;
-		float windowSizeMillis = (1800f/SAMPLE_RATE) / 1000; // should be the same as pitch detection window, in future an argument may be needed
+
 		int noFrames = (int) (lengthInMilliseconds * (1d/windowSizeMillis));
 
 		int[] pitchArray = convertToPitchArray(noteData, noFrames, millisecondsPerTick, windowSizeMillis, includeNoteEndings);
@@ -239,8 +237,16 @@ public class LoadMIDI
 		return pitchArray;
 	}
 
+	public static int[] importMIDI(String inputFilePath, TrackType chosenTrack, int windowSizeInSamples, int sampleRate)
+	{
+		float windowSizeMillis = ((float) windowSizeInSamples/ (float) sampleRate) * 1000;
+
+		return importMIDI(inputFilePath, chosenTrack, windowSizeMillis, false);
+	}
+
+
 	public static int[] importMIDI(String inputFilePath, TrackType chosenTrack)
 	{
-		return importMIDI(inputFilePath, chosenTrack, true); //1 for melody, 0 for bassline, maybe use ENUM instead
+		return importMIDI(inputFilePath, chosenTrack, 1800f, true);
 	}
 }

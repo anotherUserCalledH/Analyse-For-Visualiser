@@ -1,16 +1,27 @@
 package musicanalysis.structure;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+
 import musicanalysis.algorithms.BeatAlgorithm;
 import musicanalysis.algorithms.TarsosBeatAlgorithm;
 
 public class BeatPluginLoader extends PluginLoader
 {
-    public BeatPluginLoader()
+	private ArrayList<BeatAlgorithm> algorithms;
+
+	public BeatPluginLoader()
     {
-        super("beat");
+		algorithms = new ArrayList<BeatAlgorithm>();
         initialise();
+		importAlgorithms("beat");
     }
+
+	public ArrayList<BeatAlgorithm> getAlgorithms()
+	{
+		return algorithms;
+	}
+
     private void initialise()
     {
         BeatAlgorithm defaultAlgorithm = (BeatAlgorithm) new TarsosBeatAlgorithm("Beatroot");

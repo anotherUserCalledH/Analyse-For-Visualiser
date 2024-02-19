@@ -13,9 +13,9 @@ public class ManageDirectories
     public static final Path CURRENT_DIRECTORY = Paths.get(System.getProperty("user.dir"));
     public static final Path DATA_DIRECTORY = getDirectory(CURRENT_DIRECTORY, "data");
     public static final Path PLUGIN_DIRECTORY = getDirectory(CURRENT_DIRECTORY, "plugins");
-    public static final Path DEMUCS_DIRECTORY = ManageDirectories.PLUGIN_DIRECTORY.resolve("demucs/RunDemucs.exe");
+    public static final Path DEMUCS_DIRECTORY = PLUGIN_DIRECTORY.resolve("demucs/demucs_api.exe");
 
-    public static class DirectoryPredicate implements Predicate<Path>
+	public static class DirectoryPredicate implements Predicate<Path>
     {
         @Override
         public boolean test(Path testPath)
@@ -55,70 +55,47 @@ public class ManageDirectories
         return destinationDirectory;
     }
 
-
-
-    //Used in LoadSongModel
-    public static List<Path> listStorageDirectories()
+    public static List<Path> listFilesWithCondition(Path searchDirectory, Predicate<Path> searchCondition)
     {
-        List<Path> storageDirectories = null;
-
+        List<Path> outputFileList = null;
         try
         {
-            Stream<Path> pathStream = Files.list(DATA_DIRECTORY);
-            storageDirectories = pathStream.filter(new DirectoryPredicate()).collect(Collectors.toList());
+            Stream<Path> pathStream = Files.list(searchDirectory);
+            outputFileList = pathStream.filter(searchCondition).collect(Collectors.toList());
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
 
-        return storageDirectories;
+        return outputFileList;
     }
 
-    public static Path findSongFile(Path storageDirectory)
+    public static Path findFileWithCondition(Path searchDirectory, Predicate<Path> searchCondition)
     {
-        Path songFile = null;
-        try
+        Path outputFile = null;
+
+        List<Path> outputFileList = listFilesWithCondition(searchDirectory, searchCondition);
+        if(!outputFileList.isEmpty())
         {
-            Stream<Path> pathStream = Files.list(storageDirectory);
-            List<Path> audioFiles = pathStream.filter(new AudioFilePredicate()).collect(Collectors.toList());
-            if(!audioFiles.isEmpty())
-            {
-                songFile = audioFiles.get(0);
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
+            outputFile = outputFileList.get(0);
         }
 
-        return songFile;
+        return outputFile;
     }
 
-    //Used in model
-    public static Path storeFile(Path sourceFile, Path storageDirectory, String fullFileName)
-    {
-        Path savedFile = null;
+	public static Path copyFileToNewLocation(Path originalPath, Path destinationDirectory)
+	{
+		Path newPath = destinationDirectory.resolve(originalPath.getFileName().toString());
+		try
+		{
+			Files.copy(originalPath, newPath);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 
-        //Apply predicate to check file is audio file
-        boolean isAudioFile = new AudioFilePredicate().test(sourceFile);
-
-        if(isAudioFile == true)
-        {
-            //Create path to destination location
-            savedFile = storageDirectory.resolve(fullFileName);
-
-            //Copy file to new destination
-            try
-            {
-                Files.copy(sourceFile, savedFile);
-            }
-            catch(Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-
-        return savedFile;
-    }
+		return newPath;
+	}
 }

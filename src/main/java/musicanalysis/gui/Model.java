@@ -26,16 +26,22 @@ public class Model
 	public SavedSong saveFile(File chosenFile)
 	{
 		Path chosenFilePath = chosenFile.toPath();
-		String fullFileName = chosenFilePath.getFileName().toString();
-		String[] splitFileName = fullFileName.split("\\.");
 
-		String fileName = splitFileName[0];
-		Path storageDirectory = ManageDirectories.getDirectory(dataDirectory, fileName);
-		Path savedFile = ManageDirectories.storeFile(chosenFilePath, storageDirectory, fullFileName);
+		//Apply predicate to check file is audio file
+		boolean isAudioFile = new ManageDirectories.AudioFilePredicate().test(chosenFilePath);
 
 		SavedSong newSong = null;
-		if(savedFile != null)
+		if(isAudioFile)
 		{
+			String fullFileName = chosenFilePath.getFileName().toString();
+			String[] splitFileName = fullFileName.split("\\.");
+			String fileName = splitFileName[0];
+
+			//Create a directory with the same name as the file
+			Path storageDirectory = ManageDirectories.getDirectory(dataDirectory, fileName);
+
+			Path savedFile = ManageDirectories.copyFileToNewLocation(chosenFilePath, storageDirectory);
+
 			newSong = new SavedSong(fileName, storageDirectory, savedFile);
 		}
 		else
@@ -52,9 +58,11 @@ public class Model
 		String inputPathString = inputPath.toAbsolutePath().toString();
 		String outputPathString = outputPath.toAbsolutePath().toString();
 		String outputCommand = "-o" + outputPathString;
+		String filenameCommandPart1 = "--filename";
+		String filenameCommandPart2 = "{stem}.{ext}";
 
 		ProcessBuilder demucsPB = new ProcessBuilder();
-		demucsPB.command(demucsPathString, inputPathString, outputCommand);
+		demucsPB.command(demucsPathString, inputPathString, outputCommand, filenameCommandPart1, filenameCommandPart2);
 
 		Process demucs = null;		
 
@@ -73,11 +81,12 @@ public class Model
 	public ProgressUpdater runSourceSeparation(SavedSong songForSeparation)
 	{
 		Path selectedSongFile = songForSeparation.getSongFile();
+		Path outputDirectory = songForSeparation.getStorageDirectory();
 		ProgressUpdater task = null;
 
 		if(Files.exists(demucsPath))
 		{
-			Process demucs = buildDemucsProcess(demucsPath, selectedSongFile, dataDirectory);
+			Process demucs = buildDemucsProcess(demucsPath, selectedSongFile, outputDirectory);
 			task = new ProgressUpdater(demucs);
 		}
 		else

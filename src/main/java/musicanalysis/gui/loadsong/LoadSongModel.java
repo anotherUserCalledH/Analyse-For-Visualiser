@@ -10,46 +10,53 @@ import musicanalysis.gui.SavedSong;
 
 public class LoadSongModel
 {
-    private ObservableList<SavedSong> savedSongs;
+	private ObservableList<SavedSong> savedSongs;
 
-    private SavedSong selectedSong;
+	private SavedSong selectedSong;
 
-    public LoadSongModel()
-    {
-        savedSongs = FXCollections.observableArrayList();
-    }
+	public LoadSongModel()
+	{
+		savedSongs = FXCollections.observableArrayList();
+	}
 
-    public ObservableList<SavedSong> getSavedSongs()
-    {
-        List<Path> storageDirectories = ManageDirectories.listStorageDirectories();
-        for(Path storageDirectory : storageDirectories)
-        {
-            String songName = storageDirectory.getFileName().toString();
-            Path songFile = ManageDirectories.findSongFile(storageDirectory);
+	public ObservableList<SavedSong> getSavedSongs()
+	{
+		List<Path> storageDirectories = ManageDirectories.listFilesWithCondition(ManageDirectories.DATA_DIRECTORY, new ManageDirectories.DirectoryPredicate());
 
-            if(songFile != null)
-            {
-                SavedSong currentSavedSong = new SavedSong(songName, storageDirectory, songFile);
-                savedSongs.add(currentSavedSong);
-            }
-        }
+		for(Path storageDirectory : storageDirectories)
+		{
+			String songName = storageDirectory.getFileName().toString();
 
-        return savedSongs;
-    }
+			Path songFile = findSongFile(storageDirectory);
 
-    public void setSelectedSong(SavedSong selectedSong)
-    {
-        this.selectedSong = selectedSong;
-    }
+			if(songFile != null)
+			{
+				SavedSong currentSavedSong = new SavedSong(songName, storageDirectory, songFile);
+				savedSongs.add(currentSavedSong);
+			}
+		}
 
-    public SavedSong getSelectedSong()
-    {
-        return selectedSong;
-    }
+		return savedSongs;
+	}
 
-    public void addNewSong(SavedSong newSong)
-    {
-        savedSongs.add(newSong);
-        setSelectedSong(newSong);
-    }
+	private Path findSongFile(Path storageDirectory)
+	{
+		return ManageDirectories.findFileWithCondition(storageDirectory, new ManageDirectories.AudioFilePredicate());
+	}
+
+	public void setSelectedSong(SavedSong selectedSong)
+	{
+		this.selectedSong = selectedSong;
+	}
+
+	public SavedSong getSelectedSong()
+	{
+		return selectedSong;
+	}
+
+	public void addNewSong(SavedSong newSong)
+	{
+		savedSongs.add(newSong);
+		setSelectedSong(newSong);
+	}
 }

@@ -7,6 +7,9 @@
 <?import javafx.scene.image.ImageView?>
 
 
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.MenuButton?>
 <fx:root type="javafx.scene.layout.HBox" xmlns:fx="http://javafx.com/fxml" styleClass="panel">
 	<HBox fx:id="column0" alignment="CENTER_RIGHT" styleClass="padded-container">
 			<Label text="HEADER" fx:id="headerLabel" styleClass="header"/>
@@ -19,6 +22,14 @@
 		<ImageView fx:id="statusIcon"/>
 		<Label fx:id="statusLabel"/>
 		<Button fx:id="previewButton" text="Preview" onAction="#preview" visible="false"/>
-		<Button fx:id="evaluateButton" text="Evaluate" onAction="#evaluate" visible="false"/>
+	</HBox>
+	<HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" styleClass="padded-container">
+		<Button fx:id="optionsButton" text="..." onAction="#showOptions">
+            <ContextMenu fx:id="options">
+                <items>
+                    <MenuItem text="Evaluate" onAction="#evaluate"/>
+                </items>
+            </ContextMenu>
+        </Button>
 	</HBox>
 </fx:root>

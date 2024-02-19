@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.SplitPane?>
+
+
+<?import javafx.scene.control.Label?>
+<SplitPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="musicanalysis.gui.windows.EvaluationController">
+    <VBox spacing="10" alignment="CENTER" style="-fx-border-color: black; -fx-padding: 20px;" HBox.hgrow="ALWAYS">
+        <ListView fx:id="algorithmsListView" style="-fx-selection-bar:white; -fx-selection-bar-non-focused: white ;"/>
+        <Button text="Run Evaluation" onAction="#runEvaluation"/>
+    </VBox>
+    <VBox spacing="10" alignment="CENTER" style="-fx-border-color: black;" HBox.hgrow="ALWAYS">
+        <TabPane maxHeight="Infinity" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" fx:id="tableTabs">
+            <Tab>
+                <VBox alignment="CENTER">
+                    <Label text="Results will be shown here."/>
+                </VBox>
+            </Tab>
+        </TabPane>
+    </VBox>
+</SplitPane>

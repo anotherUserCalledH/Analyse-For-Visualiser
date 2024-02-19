@@ -1,17 +1,16 @@
 package musicanalysis.gui.panels;
 
-import musicanalysis.AnalyseMusic;
+import musicanalysis.algorithms.OnsetAlgorithm;
 import musicanalysis.gui.SavedSong;
-import musicanalysis.gui.panels.model.AnalysisData;
+import musicanalysis.gui.windows.AnalysisData;
 import musicanalysis.gui.panels.model.OnsetPanelModel;
-import musicanalysis.io.LoadData;
-import musicanalysis.gui.LaunchNewWindow;
+import musicanalysis.gui.windows.LaunchNewWindow;
 
-import javafx.event.ActionEvent;
+import java.io.IOException;
 import java.nio.file.Path;
 
 
-public class OnsetAnalysisPanel extends AnalysisPanel
+public class OnsetAnalysisPanel extends AnalysisPanel<OnsetAlgorithm>
 {
 	public OnsetAnalysisPanel() throws Exception
 	{
@@ -46,7 +45,7 @@ public class OnsetAnalysisPanel extends AnalysisPanel
 		{
 			LaunchNewWindow.launchOnsetPreview(songPath, onsetData);
 		}
-		catch(Exception e)
+		catch(IOException e)
 		{
 			e.printStackTrace();
 		}

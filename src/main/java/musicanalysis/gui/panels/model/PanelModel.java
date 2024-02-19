@@ -1,32 +1,19 @@
 package musicanalysis.gui.panels.model;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import musicanalysis.gui.SavedSong;
 import musicanalysis.algorithms.AnalysisAlgorithm;
+import musicanalysis.gui.windows.AnalysisData;
 
-import java.util.ArrayList;
-
-public abstract class PanelModel
+public abstract class PanelModel<T extends AnalysisAlgorithm>
 {
-    private ObservableList<AnalysisAlgorithm> algorithms;
-
     private AnalysisData analysisData;
 
     private SavedSong selectedSong;
 
-    private AnalysisAlgorithm chosenAlgorithm;
-    public PanelModel()
-    {
-        algorithms = FXCollections.observableArrayList(loadAlgorithms());
-    }
+    private T chosenAlgorithm;
 
-    public ObservableList<AnalysisAlgorithm> getAlgorithms()
-    {
-        return algorithms;
-    }
-
-    public void setChosenAlgorithm(AnalysisAlgorithm chosenAlgorithm)
+    public void setChosenAlgorithm(T chosenAlgorithm)
     {
         this.chosenAlgorithm = chosenAlgorithm;
     }
@@ -51,9 +38,9 @@ public abstract class PanelModel
         return getAnalysisData(selectedSong);
     }
 
-    protected abstract boolean analyse(SavedSong selectedSong, AnalysisAlgorithm chosenAlgorithm);
+    protected abstract boolean analyse(SavedSong selectedSong, T chosenAlgorithm);
 
     protected abstract AnalysisData getAnalysisData(SavedSong savedSong);
 
-    public abstract ArrayList<AnalysisAlgorithm> loadAlgorithms();
+	public abstract ObservableList<T> getAlgorithms();
 }

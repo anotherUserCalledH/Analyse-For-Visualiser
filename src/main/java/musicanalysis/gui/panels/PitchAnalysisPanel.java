@@ -1,14 +1,20 @@
 package musicanalysis.gui.panels;
 
-import musicanalysis.gui.LaunchNewWindow;
+import javafx.collections.ObservableList;
+import musicanalysis.algorithms.PitchAlgorithm;
+import musicanalysis.evaluate.PitchEvaluationModel;
+import musicanalysis.gui.windows.LaunchNewWindow;
 import musicanalysis.gui.SavedSong;
-import musicanalysis.gui.panels.model.AnalysisData;
+import musicanalysis.gui.windows.AnalysisData;
 import musicanalysis.gui.panels.model.PitchPanelModel;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
+import javafx.event.ActionEvent;
 
-public class PitchAnalysisPanel extends AnalysisPanel
+
+public class PitchAnalysisPanel extends AnalysisPanel<PitchAlgorithm>
 {
 	public PitchAnalysisPanel() throws Exception
 	{
@@ -46,7 +52,23 @@ public class PitchAnalysisPanel extends AnalysisPanel
 		{
 			LaunchNewWindow.launchPitchPreview(songPath, pitchData);
 		}
-		catch(Exception e)
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	protected void evaluate(ActionEvent event)
+	{
+		ObservableList<PitchAlgorithm> pitchAlgorithms = placeholderModel.getAlgorithms();
+		PitchEvaluationModel evalModel = new PitchEvaluationModel(pitchAlgorithms);
+
+		try
+		{
+			LaunchNewWindow.launchEvaluation(evalModel, "Evaluate Pitch");
+		}
+		catch(IOException e)
 		{
 			e.printStackTrace();
 		}

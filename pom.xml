@@ -83,16 +83,18 @@
 					</execution>
 				</executions>
 			</plugin>
-<!-- 			<plugin>
+<!--			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>3.3.0</version>
 				<configuration>
 					<includes>
-						<include>**/PitchDetectionAlgorithm.class</include>
+						<include>**/algorithms/PitchAlgorithm.class</include>
+                        <include>**/algorithms/AnalysisAlgorithm.class</include>
+                        <include>**/algorithms/AnalysisData.class</include>
 					</includes>
 				</configuration>
-			</plugin> -->
+			</plugin>-->
 		</plugins>
 	</build>
 

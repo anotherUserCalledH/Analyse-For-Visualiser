@@ -72,6 +72,7 @@ public class LoadSongComponent extends VBox
     public void addNewSong(SavedSong newSong)
     {
         loadSongModel1.addNewSong(newSong);
+		savedSongsListView.getSelectionModel().selectLast();
     }
 
 }

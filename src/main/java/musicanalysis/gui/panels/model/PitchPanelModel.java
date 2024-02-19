@@ -1,30 +1,37 @@
 package musicanalysis.gui.panels.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import musicanalysis.algorithms.PitchAlgorithm;
 import musicanalysis.gui.SavedSong;
+import musicanalysis.gui.windows.AnalysisData;
 import musicanalysis.structure.PitchPluginLoader;
-import musicanalysis.algorithms.AnalysisAlgorithm;
 import musicanalysis.io.LoadData;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 
-public class PitchPanelModel extends PanelModel
+public class PitchPanelModel extends PanelModel<PitchAlgorithm>
 {
+	private ObservableList<PitchAlgorithm> algorithms;
+
+	public PitchPanelModel()
+	{
+		PitchPluginLoader loader = new PitchPluginLoader();
+		this.algorithms = FXCollections.observableArrayList(loader.getAlgorithms());
+	}
+
+	@Override
+	public ObservableList<PitchAlgorithm> getAlgorithms()
+	{
+		return algorithms;
+	}
 
     @Override
-    public ArrayList<AnalysisAlgorithm> loadAlgorithms()
-    {
-        PitchPluginLoader loader = new PitchPluginLoader();
-        return loader.importAlgorithms();
-    }
-
-    @Override
-    protected boolean analyse(SavedSong selectedSong, AnalysisAlgorithm chosenAlgorithm)
+    protected boolean analyse(SavedSong selectedSong, PitchAlgorithm chosenAlgorithm)
     {
         Path vocalsFile = selectedSong.getVocalsFile();
-        AnalysisData analysisData = chosenAlgorithm.analyse(vocalsFile);
 
-        int[] pitchData = (int[]) analysisData.getData();
+        int[] pitchData = chosenAlgorithm.analyse(vocalsFile);
         Path pitchDataFile = selectedSong.getPitchDataFile();
         LoadData.writePitchData(pitchData, pitchDataFile);
 

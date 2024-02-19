@@ -1,29 +1,35 @@
 package musicanalysis.gui.panels.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import musicanalysis.algorithms.BeatAlgorithm;
 import musicanalysis.gui.SavedSong;
+import musicanalysis.gui.windows.AnalysisData;
 import musicanalysis.structure.BeatPluginLoader;
-import musicanalysis.algorithms.AnalysisAlgorithm;
 import musicanalysis.io.LoadData;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 
-public class BeatPanelModel extends PanelModel
+public class BeatPanelModel extends PanelModel<BeatAlgorithm>
 {
+	private ObservableList<BeatAlgorithm> algorithms;
+	public BeatPanelModel()
+	{
+		BeatPluginLoader loader = new BeatPluginLoader();
+		this.algorithms = FXCollections.observableArrayList(loader.getAlgorithms());
+	}
+
+	@Override
+	public ObservableList<BeatAlgorithm> getAlgorithms()
+	{
+		return algorithms;
+	}
 
     @Override
-    public ArrayList<AnalysisAlgorithm> loadAlgorithms()
-    {
-        BeatPluginLoader loader = new BeatPluginLoader();
-        return loader.importAlgorithms();
-    }
-
-    @Override
-    public boolean analyse(SavedSong selectedSong, AnalysisAlgorithm chosenAlgorithm)
+    public boolean analyse(SavedSong selectedSong, BeatAlgorithm chosenAlgorithm)
     {
         Path selectedSongFile = selectedSong.getSongFile();
-        AnalysisData analysisData = chosenAlgorithm.analyse(selectedSongFile);
-        float[] beatData = (float[]) analysisData.getData();
+        float[] beatData = chosenAlgorithm.analyse(selectedSongFile);
 
         boolean detectionSuccessful = false;
         if(beatData != null)

@@ -1,5 +1,9 @@
-package musicanalysis.gui;
+package musicanalysis.gui.windows;
 
+import javafx.scene.Parent;
+import musicanalysis.algorithms.AnalysisAlgorithm;
+import musicanalysis.evaluate.EvaluationModel;
+import musicanalysis.gui.GUI;
 import musicanalysis.preview.PreviewVisualiser;
 import musicanalysis.preview.VisualiserEffect;
 import musicanalysis.preview.BeatMarker;
@@ -15,6 +19,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.fxml.FXMLLoader;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class LaunchNewWindow
@@ -24,9 +29,10 @@ public class LaunchNewWindow
 		BEAT, PITCH, ONSET
 	}
 
-	public static VisualiserEffect launchPreview(Path songPath, AlgorithmType previewType) throws Exception
+	//Needs refactoring
+	public static VisualiserEffect launchPreview(Path songPath, AlgorithmType previewType) throws IOException
 	{
-		FXMLLoader fxmlLoader1 = new FXMLLoader(GUI.class.getResource("preview_window.fxml"));
+		FXMLLoader fxmlLoader1 = new FXMLLoader(GUI.class.getResource("windows/preview_window.fxml"));
 		Pane root = fxmlLoader1.load();
 		PreviewController previewController1 = fxmlLoader1.getController();
 		ObservableList<Node> list = root.getChildren();
@@ -63,37 +69,35 @@ public class LaunchNewWindow
 		return effect;
 	}
 
-	public static void launchBeatPreview(Path songPath, float[] beatArray) throws Exception
+	public static void launchBeatPreview(Path songPath, float[] beatArray) throws IOException
 	{
 		BeatMarker effect = (BeatMarker) launchPreview(songPath, AlgorithmType.BEAT);
 		effect.setData(beatArray);
 	}
 
-	public static void launchOnsetPreview(Path songPath, float[] onsetArray) throws Exception
+	public static void launchOnsetPreview(Path songPath, float[] onsetArray) throws IOException
 	{
 		TimestampMarker effect = (TimestampMarker) launchPreview(songPath, AlgorithmType.ONSET);
 		effect.setData(onsetArray);
 	}
 
-	public static void launchPitchPreview(Path songPath, int[] pitchArray) throws Exception
+	public static void launchPitchPreview(Path songPath, int[] pitchArray) throws IOException
 	{
 	}
 
-	public static void launchEvaluation(SavedSong songToEvaluate) throws Exception
+	public static <T extends AnalysisAlgorithm> void launchEvaluation(EvaluationModel<T> evalModel, String windowTitle) throws IOException
 	{
+		int width = 1000;
+		int height = 500;
 
+		FXMLLoader fxmlLoader2 = new FXMLLoader(GUI.class.getResource("windows/evaluation_window.fxml"));
+		Parent root = fxmlLoader2.load();
+		EvaluationController<T> evalController1 = fxmlLoader2.getController();
+		evalController1.setModel(evalModel);
+		Stage stage1 = new Stage();
+		stage1.setTitle(windowTitle);
+		stage1.setScene(new Scene(root, width, height));
+		stage1.initModality(Modality.APPLICATION_MODAL);
+		stage1.show();
 	}
-
-//	public static void launchPitchEvaluation() throws Exception
-//	{
-//		FXMLLoader fxmlLoader1 = new FXMLLoader(GUI.class.getResource("eval_window.fxml"));
-//		Pane root = fxmlLoader1.load();
-//		PreviewController previewController1 = fxmlLoader1.getController();
-//		Stage stage1 = new Stage();
-//		stage1.setTitle("Evaluate Pitch");
-//		stage1.setScene(new Scene(root));
-//		stage1.initModality(Modality.APPLICATION_MODAL);
-//		stage1.show();
-//
-//	}
 }

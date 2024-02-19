@@ -26,7 +26,7 @@ public class SavedSong
 		this.storageDirectory = storageDirectory;
 		this.songFile = songFile;
 
-		this.separatedAudioDirectory = storageDirectory.resolve("../htdemucs/" + songName);
+		this.separatedAudioDirectory = storageDirectory.resolve("htdemucs/");
 		if(Files.exists(separatedAudioDirectory.resolve("vocals.wav"))){this.hasSeparatedAudio = true;}
 		else {this.hasSeparatedAudio = false;}		
 

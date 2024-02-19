@@ -18,15 +18,6 @@ import java.util.stream.Stream;
 
 public abstract class PluginLoader
 {
-	protected String pluginDirectoryName;
-	protected ArrayList<AnalysisAlgorithm> algorithms;
-
-	public PluginLoader(String pluginDirectoryName)
-	{
-		this.algorithms = new ArrayList<AnalysisAlgorithm>();
-		this.pluginDirectoryName = pluginDirectoryName;
-	}
-
 	protected static URL[] listJarFiles(Path pluginDirectory)
 	{
 		List<Path> jarFiles = null;
@@ -65,7 +56,7 @@ public abstract class PluginLoader
 		return jarURLs;
 	}
 
-	public ArrayList<AnalysisAlgorithm> importAlgorithms()
+	protected void importAlgorithms(String pluginDirectoryName)
 	{
 		Path pluginPath = ManageDirectories.PLUGIN_DIRECTORY;
 		Path pluginDirectory = pluginPath.resolve(pluginDirectoryName);
@@ -93,10 +84,7 @@ public abstract class PluginLoader
 				}
 			}
 		}
-
-		return algorithms;
 	}
 
 	protected abstract void addToAlgorithms(Class<?> newClass);
-
 }
